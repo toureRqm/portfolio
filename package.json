@@ -1,0 +1,16 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npx nodemon --exec \"npx ts-node\" index.ts",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm install && npm run build && cd ../server && npm install && npm run build",
+    "start": "node server/dist/index.js",
+    "db:migrate": "node database/migrate.js",
+    "db:seed": "node database/seed.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

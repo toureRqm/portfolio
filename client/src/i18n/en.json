@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "about": "About",
+    "projects": "Projects",
+    "experience": "Experience",
+    "contact": "Contact"
+  },
+  "hero": {
+    "cta_work": "View My Work",
+    "cta_cv": "Download CV",
+    "typewriter": [
+      "I build web apps.",
+      "I craft UX that converts.",
+      "I ship products that scale."
+    ]
+  },
+  "about": {
+    "section_label": "About Me",
+    "years_exp": "Years Experience",
+    "projects_delivered": "Projects Delivered",
+    "tech_stacks": "Tech Stacks"
+  },
+  "skills": {
+    "section_label": "Tech Stack",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "mobile": "Mobile",
+      "tools": "Tools"
+    },
+    "levels": { "1": "Beginner", "2": "Intermediate", "3": "Advanced" }
+  },
+  "projects": {
+    "section_label": "Projects",
+    "view_demo": "Live Demo",
+    "view_code": "Source Code",
+    "status_completed": "Completed",
+    "status_in_progress": "In Progress",
+    "role": "Role",
+    "context": "Context",
+    "period": "Period"
+  },
+  "experience": {
+    "section_label": "Experience",
+    "present": "Present"
+  },
+  "contact": {
+    "section_label": "Contact",
+    "tagline": "Open to remote opportunities — Let's build something together",
+    "name_placeholder": "Your name",
+    "email_placeholder": "Your email",
+    "message_placeholder": "Your message",
+    "submit": "Send Message",
+    "success": "Message sent! I'll get back to you soon.",
+    "error": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "built_with": "Built with React & Node.js"
+  },
+  "maintenance": {
+    "label": "Portfolio",
+    "subtitle": "Full Stack Developer",
+    "message": "My portfolio is currently <strong>under construction</strong>.<br/>I'm preparing something polished — projects, experiences and achievements.<br/>Come back soon.",
+    "status": "In Progress"
+  }
+}

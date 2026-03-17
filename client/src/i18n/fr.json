@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "about": "À propos",
+    "projects": "Projets",
+    "experience": "Expérience",
+    "contact": "Contact"
+  },
+  "hero": {
+    "cta_work": "Voir mes projets",
+    "cta_cv": "Télécharger le CV",
+    "typewriter": [
+      "Je crée des apps web.",
+      "Je conçois des UX qui convertissent.",
+      "Je livre des produits qui scalent."
+    ]
+  },
+  "about": {
+    "section_label": "À Propos",
+    "years_exp": "Ans d'expérience",
+    "projects_delivered": "Projets livrés",
+    "tech_stacks": "Stacks maîtrisées"
+  },
+  "skills": {
+    "section_label": "Stack Technique",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "mobile": "Mobile",
+      "tools": "Outils"
+    },
+    "levels": { "1": "Débutant", "2": "Intermédiaire", "3": "Avancé" }
+  },
+  "projects": {
+    "section_label": "Projets",
+    "view_demo": "Démo Live",
+    "view_code": "Code Source",
+    "status_completed": "Terminé",
+    "status_in_progress": "En cours",
+    "role": "Rôle",
+    "context": "Contexte",
+    "period": "Période"
+  },
+  "experience": {
+    "section_label": "Expériences",
+    "present": "Aujourd'hui"
+  },
+  "contact": {
+    "section_label": "Contact",
+    "tagline": "Ouvert aux missions remote — Construisons quelque chose ensemble",
+    "name_placeholder": "Votre nom",
+    "email_placeholder": "Votre email",
+    "message_placeholder": "Votre message",
+    "submit": "Envoyer",
+    "success": "Message envoyé ! Je vous répondrai bientôt.",
+    "error": "Une erreur est survenue. Veuillez réessayer."
+  },
+  "footer": {
+    "built_with": "Construit avec React & Node.js"
+  },
+  "maintenance": {
+    "label": "Portfolio",
+    "subtitle": "Développeur Full Stack",
+    "message": "Mon portfolio est actuellement <strong>en cours de construction</strong>.<br/>Je prépare quelque chose de soigné — projets, expériences et réalisations.<br/>Revenez bientôt.",
+    "status": "En cours"
+  }
+}

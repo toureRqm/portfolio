@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #0b0b0f;
+    --gold: #c9a96e;
+    --gold-dim: rgba(201, 169, 110, 0.18);
+    --gold-faint: rgba(201, 169, 110, 0.07);
+    --text: #e8e3dc;
+    --muted: #6b6560;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0a0a0f;
+    color: #f0f0f0;
+    font-family: 'Space Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background: rgba(201, 169, 110, 0.3);
+    color: #e2c99a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0a0f;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a35;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c9a96e;
+  }
+}
+
+@layer components {
+  .section-label {
+    @apply font-grotesk text-gold tracking-widest uppercase text-sm flex items-center gap-3;
+  }
+
+  .section-label::before {
+    content: '';
+    @apply block w-8 h-px bg-gold flex-shrink-0;
+  }
+
+  .section-title {
+    @apply font-syne font-bold text-4xl md:text-5xl text-text-primary leading-tight;
+  }
+
+  .gold-border-card {
+    @apply border border-border bg-bg-card rounded-lg transition-all duration-300;
+  }
+
+  .gold-border-card:hover {
+    @apply border-gold shadow-[0_0_30px_rgba(201,169,110,0.08)];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 bg-gold text-bg-primary font-grotesk font-600 rounded transition-all duration-300 hover:bg-gold-light hover:shadow-[0_0_20px_rgba(201,169,110,0.3)];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-6 py-3 border border-gold text-gold font-grotesk rounded transition-all duration-300 hover:bg-gold-dim hover:shadow-[0_0_20px_rgba(201,169,110,0.15)];
+  }
+
+  .tech-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded text-xs font-grotesk font-medium;
+  }
+
+  .deco-dots-bg {
+    background-image: radial-gradient(circle, rgba(201, 169, 110, 0.25) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .deco-code-snippet {
+    @apply absolute font-mono text-xs font-light text-gold/20 whitespace-nowrap pointer-events-none select-none;
+  }
+}
+
+@layer utilities {
+  .font-600 {
+    font-weight: 600;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+}
