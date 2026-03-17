@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github, Calendar, MapPin, User, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApi } from '../hooks/useApi';
@@ -11,15 +11,19 @@ interface ProjectModalProps {
 }
 
 const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
+  enter: (dir: number) => ({ x: dir >= 0 ? '100%' : '-100%', opacity: 0 }),
   center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
+  exit: (dir: number) => ({ x: dir >= 0 ? '-100%' : '100%', opacity: 0 }),
 };
+
+const AUTO_DELAY = 4500; // ms between auto-slides
 
 export default function ProjectModal({ projectId, onClose }: ProjectModalProps) {
   const { data: project, loading } = useApi<Project>(`/api/projects/${projectId}`);
   const [imgIdx, setImgIdx] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [paused, setPaused] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { t, pick } = useTranslation();
 
   const allImages = project
@@ -29,18 +33,39 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
       ]
     : [];
 
-  const goNext = () => {
+  const goNext = (auto = false) => {
     if (allImages.length <= 1) return;
     setDirection(1);
     setImgIdx((i) => (i + 1) % allImages.length);
+    if (!auto) restartInterval();
   };
 
   const goPrev = () => {
     if (allImages.length <= 1) return;
     setDirection(-1);
     setImgIdx((i) => (i - 1 + allImages.length) % allImages.length);
+    restartInterval();
   };
 
+  const restartInterval = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (!paused && allImages.length > 1) {
+      intervalRef.current = setInterval(() => goNext(true), AUTO_DELAY);
+    }
+  };
+
+  // Auto-slide
+  useEffect(() => {
+    if (allImages.length <= 1 || paused) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
+    intervalRef.current = setInterval(() => goNext(true), AUTO_DELAY);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allImages.length, paused]);
+
+  // Keyboard
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -64,8 +89,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
 
   const formatDate = (dateStr: string | null): string => {
     if (!dateStr) return t('experience.present');
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   };
 
   return (
@@ -76,7 +100,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
-        style={{ backdropFilter: 'blur(8px)', background: 'rgba(10,10,15,0.85)' }}
+        style={{ backdropFilter: 'blur(8px)', background: 'rgba(10,10,15,0.88)' }}
         onClick={onClose}
       >
         <motion.div
@@ -85,7 +109,8 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.97 }}
           transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-          className="relative bg-bg-card border border-border rounded-xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl"
+          className="relative bg-bg-card border border-border rounded-xl w-full max-w-5xl overflow-hidden shadow-2xl flex flex-col md:flex-row"
+          style={{ height: 'min(88vh, 700px)' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close */}
@@ -97,21 +122,24 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
           </button>
 
           {loading ? (
-            <div className="flex items-center justify-center h-64">
+            <div className="flex items-center justify-center flex-1">
               <Loader2 size={32} className="text-gold animate-spin" />
             </div>
           ) : project ? (
-            <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-
-              {/* Left — Image Slider */}
+            <>
+              {/* Left — Image Slider (fills full height) */}
               <div
-                className="md:w-1/2 flex-shrink-0 bg-bg-secondary relative overflow-hidden"
-                style={{ minHeight: '240px' }}
+                className="relative overflow-hidden bg-black flex-shrink-0"
+                style={{ width: '100%', height: '260px', flex: 'none' }}
+                // On md+ override via tailwind below
+                onMouseEnter={() => setPaused(true)}
+                onMouseLeave={() => setPaused(false)}
               >
-                {currentImage ? (
-                  <>
-                    {/* Sliding image */}
-                    <div className="relative w-full overflow-hidden" style={{ height: '100%', maxHeight: '60vh' }}>
+                {/* Tailwind can't do inline responsive, use a wrapper */}
+                <style>{`@media (min-width:768px){.modal-img-panel{width:50%!important;height:100%!important}}`}</style>
+                <div className="modal-img-panel absolute inset-0">
+                  {currentImage ? (
+                    <>
                       <AnimatePresence initial={false} custom={direction} mode="popLayout">
                         <motion.img
                           key={imgIdx}
@@ -120,54 +148,75 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                           initial="enter"
                           animate="center"
                           exit="exit"
-                          transition={{ duration: 0.28, ease: 'easeInOut' }}
+                          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                           src={currentImage.image_url}
                           alt={`${displayTitle} — ${imgIdx + 1}`}
-                          className="absolute inset-0 w-full h-full object-cover"
+                          className="absolute inset-0 w-full h-full"
+                          style={{ objectFit: 'cover', objectPosition: 'center top' }}
                           draggable={false}
                         />
                       </AnimatePresence>
-                    </div>
 
-                    {/* Arrows + counter */}
-                    {allImages.length > 1 && (
-                      <>
-                        <button
-                          onClick={goPrev}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
-                          style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}
-                          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(201,169,110,0.5)'; (e.currentTarget as HTMLButtonElement).style.color = '#c9a96e'; }}
-                          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
-                        >
-                          <ChevronLeft size={16} />
-                        </button>
-                        <button
-                          onClick={goNext}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
-                          style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}
-                          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(201,169,110,0.5)'; (e.currentTarget as HTMLButtonElement).style.color = '#c9a96e'; }}
-                          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
-                        >
-                          <ChevronRight size={16} />
-                        </button>
-                        <div
-                          className="absolute bottom-3 right-3 z-10 text-xs font-mono px-2 py-0.5 rounded-full"
-                          style={{ background: 'rgba(0,0,0,0.6)', color: '#c9a96e' }}
-                        >
-                          {imgIdx + 1} / {allImages.length}
-                        </div>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <div className="text-7xl font-syne font-bold text-gold/10 select-none">{displayTitle.charAt(0)}</div>
-                  </div>
-                )}
+                      {/* Subtle dark vignette at bottom */}
+                      <div
+                        className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+                        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.45), transparent)' }}
+                      />
+
+                      {/* Arrows */}
+                      {allImages.length > 1 && (
+                        <>
+                          <button
+                            onClick={goPrev}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+                            style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
+                            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(201,169,110,0.25)'; (e.currentTarget as HTMLButtonElement).style.borderColor = '#c9a96e'; (e.currentTarget as HTMLButtonElement).style.color = '#c9a96e'; }}
+                            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.55)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
+                          >
+                            <ChevronLeft size={16} />
+                          </button>
+                          <button
+                            onClick={goNext}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+                            style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
+                            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(201,169,110,0.25)'; (e.currentTarget as HTMLButtonElement).style.borderColor = '#c9a96e'; (e.currentTarget as HTMLButtonElement).style.color = '#c9a96e'; }}
+                            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.55)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
+                          >
+                            <ChevronRight size={16} />
+                          </button>
+
+                          {/* Counter + auto-slide progress bar */}
+                          <div className="absolute bottom-3 left-0 right-0 z-10 flex flex-col items-center gap-1.5 px-4">
+                            {/* Thin progress bar */}
+                            <div className="w-full h-px rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                              {!paused && (
+                                <motion.div
+                                  key={`${imgIdx}-progress`}
+                                  className="h-full rounded-full"
+                                  style={{ background: '#c9a96e' }}
+                                  initial={{ width: '0%' }}
+                                  animate={{ width: '100%' }}
+                                  transition={{ duration: AUTO_DELAY / 1000, ease: 'linear' }}
+                                />
+                              )}
+                            </div>
+                            <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                              {imgIdx + 1} / {allImages.length}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-bg-card">
+                      <div className="text-7xl font-syne font-bold text-gold/10 select-none">{displayTitle.charAt(0)}</div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Right — Details */}
-              <div className="md:w-1/2 overflow-y-auto p-6 md:p-8 flex flex-col gap-5">
+              <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-5">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span
@@ -189,12 +238,8 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                       {formatDate(project.date_start)} – {formatDate(project.date_end)}
                     </div>
                   )}
-                  {displayRole && (
-                    <div className="flex items-center gap-1.5"><User size={13} className="text-gold" />{displayRole}</div>
-                  )}
-                  {displayContext && (
-                    <div className="flex items-center gap-1.5"><MapPin size={13} className="text-gold" />{displayContext}</div>
-                  )}
+                  {displayRole && <div className="flex items-center gap-1.5"><User size={13} className="text-gold" />{displayRole}</div>}
+                  {displayContext && <div className="flex items-center gap-1.5"><MapPin size={13} className="text-gold" />{displayContext}</div>}
                 </div>
 
                 <div className="h-px bg-border" />
@@ -213,11 +258,8 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     <h3 className="font-grotesk font-medium text-text-secondary text-xs tracking-widest uppercase mb-3">Tech Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech) => (
-                        <span
-                          key={tech.id}
-                          className="tech-badge"
-                          style={{ backgroundColor: tech.color + '25', color: tech.color, border: `1px solid ${tech.color}40` }}
-                        >
+                        <span key={tech.id} className="tech-badge"
+                          style={{ backgroundColor: tech.color + '25', color: tech.color, border: `1px solid ${tech.color}40` }}>
                           {tech.name}
                         </span>
                       ))}
@@ -245,9 +287,9 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                   </div>
                 )}
               </div>
-            </div>
+            </>
           ) : (
-            <div className="flex items-center justify-center h-64 text-text-secondary">
+            <div className="flex items-center justify-center flex-1 text-text-secondary">
               <p>Project not found.</p>
             </div>
           )}
