@@ -420,7 +420,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           <div>
             <p className="maint-label">{t('maintenance.label')}</p>
             <h1 className="maint-h1">
-              Abdourahmane<br />
+              Abdou <br />Rahmane<br />
               <span>Touré</span>
             </h1>
             <p className="maint-subtitle">{t('maintenance.subtitle')}</p>
