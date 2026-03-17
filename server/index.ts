@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
 import publicRoutes from './routes/public';
+import adminRoutes from './routes/admin';
 import pool from './config/db';
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use('/static', express.static(path.resolve(__dirname, '../../static')));
 
 // API Routes
 app.use('/api', publicRoutes);
+app.use('/api', adminRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

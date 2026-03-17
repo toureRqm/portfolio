@@ -22,14 +22,15 @@ export function useTranslation() {
   };
 
   // For dynamic DB content: returns _fr value if lang=fr and non-empty, else fallback to base field
-  const pick = <T extends Record<string, unknown>>(obj: T | null | undefined, field: string): string => {
+  const pick = <T extends object>(obj: T | null | undefined, field: string): string => {
     if (!obj) return '';
+    const rec = obj as Record<string, unknown>;
     if (lang === 'fr') {
-      const frVal = obj[`${field}_fr`];
+      const frVal = rec[`${field}_fr`];
       if (typeof frVal === 'string' && frVal.trim()) return frVal;
     }
-    const base = obj[field];
-    return typeof base === 'string' ? base : '';
+    const val = rec[field];
+    return typeof val === 'string' ? val : '';
   };
 
   return { t, lang, typewriterItems, pick };

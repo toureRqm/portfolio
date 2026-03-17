@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -10,12 +11,16 @@ import Footer from './components/Footer';
 import MaintenancePage from './components/MaintenancePage';
 import { useApi } from './hooks/useApi';
 import type { Profile } from './types';
+import { AuthProvider } from './admin/context/AuthContext';
+import AdminApp from './admin/AdminApp';
+import AdminLogin from './admin/AdminLogin';
+import ProtectedRoute from './admin/ProtectedRoute';
 
-function App() {
+function PortfolioPublic() {
   const { data: profile, loading } = useApi<Profile>('/api/profile');
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
 
-  // Check if admin is logged in (token set in localStorage by admin panel — Phase 2)
+  // Check if admin is logged in (token set in localStorage by admin panel)
   const isAdminLoggedIn = !!localStorage.getItem('admin_token');
 
   // Show maintenance page if enabled and admin is not logged in
@@ -39,6 +44,27 @@ function App() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute>
+                <AdminApp />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/*" element={<PortfolioPublic />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
