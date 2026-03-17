@@ -1,5 +1,6 @@
 import type { Profile } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../context/LanguageContext';
 
 interface MaintenancePageProps {
   profile?: Profile | null;
@@ -7,8 +8,13 @@ interface MaintenancePageProps {
 
 export default function MaintenancePage({ profile }: MaintenancePageProps) {
   const { t } = useTranslation();
+  const { lang, setLang } = useLanguage();
   const photoUrl = profile?.photo_url || '/static/media/moi.1534d679.png';
-  const messageHtml = t('maintenance.message');
+
+  // Use DB content if set, otherwise fall back to JSON translations
+  const messageHtml = lang === 'fr'
+    ? (profile?.maintenance_message_fr || t('maintenance.message'))
+    : (profile?.maintenance_message || t('maintenance.message'));
 
   return (
     <>
@@ -346,6 +352,32 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
       `}</style>
 
       <div className="maint-scene">
+        {/* Language switcher */}
+        <button
+          onClick={() => setLang(lang === 'en' ? 'fr' : 'en')}
+          style={{
+            position: 'absolute',
+            top: '1.2rem',
+            right: '1.5rem',
+            zIndex: 10,
+            background: 'rgba(201,169,110,0.08)',
+            border: '1px solid rgba(201,169,110,0.3)',
+            color: '#c9a96e',
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            letterSpacing: '0.1em',
+            padding: '0.35rem 0.75rem',
+            borderRadius: '999px',
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(201,169,110,0.16)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(201,169,110,0.08)')}
+        >
+          {lang === 'en' ? 'FR' : 'EN'}
+        </button>
+
         {/* LEFT */}
         <div className="maint-left">
           <div className="maint-v-line" />

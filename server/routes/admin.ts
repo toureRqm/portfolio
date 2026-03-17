@@ -268,6 +268,20 @@ router.delete('/admin/projects/:id', requireAuth, async (req: AuthRequest, res: 
   }
 });
 
+// POST /api/admin/projects/:id/cover
+router.post('/admin/projects/:id/cover', requireAuth, upload.single('cover'), async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const url = `/uploads/${req.file.filename}`;
+  try {
+    await pool.query('UPDATE projects SET cover_image = $1, updated_at = NOW() WHERE id = $2', [url, id]);
+    return res.json({ url });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // POST /api/admin/projects/:id/images
 router.post('/admin/projects/:id/images', requireAuth, upload.array('images', 10), async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
@@ -592,6 +606,25 @@ router.put('/admin/settings/password', requireAuth, async (req: AuthRequest, res
     if (!valid) return res.status(401).json({ error: 'Current password is incorrect' });
     const hash = await bcrypt.hash(newPassword, 12);
     await pool.query('UPDATE admin_user SET password_hash = $1 WHERE id = $2', [hash, req.adminId]);
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// PUT /api/admin/settings/maintenance-content
+router.put('/admin/settings/maintenance-content', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { maintenance_message, maintenance_message_fr } = req.body as {
+    maintenance_message: string;
+    maintenance_message_fr: string;
+  };
+  try {
+    await pool.query(
+      `UPDATE profile SET maintenance_message = $1, maintenance_message_fr = $2, updated_at = NOW()
+       WHERE id = (SELECT id FROM profile LIMIT 1)`,
+      [maintenance_message || null, maintenance_message_fr || null]
+    );
     return res.json({ success: true });
   } catch (err) {
     console.error(err);

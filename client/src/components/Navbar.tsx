@@ -86,14 +86,22 @@ export default function Navbar({ profile }: NavbarProps) {
           </button>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden text-text-secondary hover:text-gold transition-colors"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile: language toggle + hamburger — always visible */}
+        <div className="md:hidden flex items-center gap-2">
+          <button
+            onClick={() => setLang(lang === 'en' ? 'fr' : 'en')}
+            className="text-xs font-mono border border-gold/30 hover:border-gold px-2 py-1 text-gold/70 hover:text-gold transition-all"
+          >
+            {lang === 'en' ? 'FR' : 'EN'}
+          </button>
+          <button
+            className="text-text-secondary hover:text-gold transition-colors"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -117,13 +125,6 @@ export default function Navbar({ profile }: NavbarProps) {
           >
             Resume
           </a>
-          {/* Language toggle mobile */}
-          <button
-            onClick={() => setLang(lang === 'en' ? 'fr' : 'en')}
-            className="text-xs font-mono border border-gold/30 hover:border-gold px-2 py-1 text-gold/60 hover:text-gold transition-all w-fit"
-          >
-            {lang === 'en' ? 'FR' : 'EN'}
-          </button>
         </div>
       )}
     </nav>

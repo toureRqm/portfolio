@@ -91,6 +91,8 @@ export interface Profile {
   github_url: string | null;
   twitter_url: string | null;
   maintenance_mode: boolean;
+  maintenance_message: string | null;
+  maintenance_message_fr: string | null;
   updated_at: string;
 }
 

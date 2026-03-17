@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS profile (
   github_url VARCHAR(500),
   twitter_url VARCHAR(500),
   maintenance_mode BOOLEAN DEFAULT false,
+  maintenance_message TEXT,
+  maintenance_message_fr TEXT,
   updated_at TIMESTAMP DEFAULT NOW()
 );
 

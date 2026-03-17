@@ -1,6 +1,6 @@
 import { useState, useEffect, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
-import { Loader2, Shield, Lock } from 'lucide-react';
+import { Loader2, Shield, Lock, FileText } from 'lucide-react';
 import { useAdminApi } from '../hooks/useAdminApi';
 import type { Profile } from '../../types';
 
@@ -25,6 +25,11 @@ export default function SettingsPage() {
   const [maintenance, setMaintenance] = useState(false);
   const [maintenanceSaving, setMaintenanceSaving] = useState(false);
 
+  const [maintMsgEn, setMaintMsgEn] = useState('');
+  const [maintMsgFr, setMaintMsgFr] = useState('');
+  const [maintMsgSaving, setMaintMsgSaving] = useState(false);
+  const [maintMsgSuccess, setMaintMsgSuccess] = useState(false);
+
   const [currentPw, setCurrentPw] = useState('');
   const [newPw, setNewPw] = useState('');
   const [confirmPw, setConfirmPw] = useState('');
@@ -33,8 +38,28 @@ export default function SettingsPage() {
   const [pwSuccess, setPwSuccess] = useState(false);
 
   useEffect(() => {
-    if (profile) setMaintenance(profile.maintenance_mode);
+    if (profile) {
+      setMaintenance(profile.maintenance_mode);
+      setMaintMsgEn(profile.maintenance_message ?? '');
+      setMaintMsgFr(profile.maintenance_message_fr ?? '');
+    }
   }, [profile]);
+
+  const handleSaveMaintContent = async (e: FormEvent) => {
+    e.preventDefault();
+    setMaintMsgSaving(true);
+    try {
+      await axios.put('/api/admin/settings/maintenance-content', {
+        maintenance_message: maintMsgEn,
+        maintenance_message_fr: maintMsgFr,
+      });
+      setMaintMsgSuccess(true);
+      refetch();
+      setTimeout(() => setMaintMsgSuccess(false), 3000);
+    } finally {
+      setMaintMsgSaving(false);
+    }
+  };
 
   const handleToggleMaintenance = async () => {
     setMaintenanceSaving(true);
@@ -108,6 +133,71 @@ export default function SettingsPage() {
             )}
           </button>
         </div>
+      </div>
+
+      {/* Maintenance Page Content */}
+      <div className="p-6 rounded-xl" style={{ background: '#16161d', border: '1px solid #2a2a35' }}>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: '#a78bfa20' }}>
+            <FileText size={18} style={{ color: '#a78bfa' }} />
+          </div>
+          <div>
+            <h3 className="font-syne font-bold text-white">Maintenance Page Content</h3>
+            <p className="text-xs mt-0.5" style={{ color: '#6b7280' }}>Leave empty to use the default message</p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSaveMaintContent} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#9ca3af' }}>
+              Message — English
+            </label>
+            <textarea
+              rows={3}
+              value={maintMsgEn}
+              onChange={(e) => setMaintMsgEn(e.target.value)}
+              placeholder="My portfolio is currently <strong>under construction</strong>."
+              className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-colors resize-none"
+              style={{ background: '#0a0a0f', border: '1px solid #2a2a35', color: '#fff' }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#c9a96e')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = '#2a2a35')}
+            />
+            <p className="text-xs mt-1" style={{ color: '#4b5563' }}>HTML tags are supported: &lt;strong&gt;, &lt;br/&gt;</p>
+          </div>
+          <div>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#9ca3af' }}>
+              Message — Français
+            </label>
+            <textarea
+              rows={3}
+              value={maintMsgFr}
+              onChange={(e) => setMaintMsgFr(e.target.value)}
+              placeholder="Mon portfolio est actuellement <strong>en cours de construction</strong>."
+              className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-colors resize-none"
+              style={{ background: '#0a0a0f', border: '1px solid #2a2a35', color: '#fff' }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#c9a96e')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = '#2a2a35')}
+            />
+          </div>
+
+          {maintMsgSuccess && (
+            <p className="text-sm py-2 px-3 rounded-lg" style={{ background: '#22c55e20', color: '#4ade80' }}>
+              Content saved successfully.
+            </p>
+          )}
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={maintMsgSaving}
+              className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-opacity"
+              style={{ background: '#a78bfa', color: '#000', opacity: maintMsgSaving ? 0.7 : 1 }}
+            >
+              {maintMsgSaving && <Loader2 size={14} className="animate-spin" />}
+              Save Content
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* Change Password */}

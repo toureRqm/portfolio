@@ -10,23 +10,17 @@ interface ProjectModalProps {
   onClose: () => void;
 }
 
+const slideVariants = {
+  enter: (dir: number) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (dir: number) => ({ x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
+};
+
 export default function ProjectModal({ projectId, onClose }: ProjectModalProps) {
   const { data: project, loading } = useApi<Project>(`/api/projects/${projectId}`);
   const [imgIdx, setImgIdx] = useState(0);
+  const [direction, setDirection] = useState(0);
   const { t, pick } = useTranslation();
-
-  // Close on Escape
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handler);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', handler);
-      document.body.style.overflow = '';
-    };
-  }, [onClose]);
 
   const allImages = project
     ? [
@@ -35,8 +29,34 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
       ]
     : [];
 
-  const currentImage = allImages[imgIdx];
+  const goNext = () => {
+    if (allImages.length <= 1) return;
+    setDirection(1);
+    setImgIdx((i) => (i + 1) % allImages.length);
+  };
 
+  const goPrev = () => {
+    if (allImages.length <= 1) return;
+    setDirection(-1);
+    setImgIdx((i) => (i - 1 + allImages.length) % allImages.length);
+  };
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
+    };
+    document.addEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handler);
+      document.body.style.overflow = '';
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onClose, imgIdx, allImages.length]);
+
+  const currentImage = allImages[imgIdx];
   const displayTitle = pick(project, 'title');
   const displayDescription = pick(project, 'description');
   const displayRole = pick(project, 'role');
@@ -68,7 +88,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
           className="relative bg-bg-card border border-border rounded-xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close button */}
+          {/* Close */}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-bg-secondary border border-border text-text-secondary hover:text-gold hover:border-gold transition-all duration-300"
@@ -82,74 +102,86 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
             </div>
           ) : project ? (
             <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-              {/* Left — Image */}
-              <div className="md:w-1/2 flex-shrink-0 bg-bg-secondary flex items-center justify-center relative overflow-hidden"
-                style={{ minHeight: '240px' }}>
+
+              {/* Left — Image Slider */}
+              <div
+                className="md:w-1/2 flex-shrink-0 bg-bg-secondary relative overflow-hidden"
+                style={{ minHeight: '240px' }}
+              >
                 {currentImage ? (
                   <>
-                    <img
-                      src={currentImage.image_url}
-                      alt={`${displayTitle} screenshot`}
-                      className="w-full h-full object-cover"
-                      style={{ maxHeight: '60vh' }}
-                    />
+                    {/* Sliding image */}
+                    <div className="relative w-full overflow-hidden" style={{ height: '100%', maxHeight: '60vh' }}>
+                      <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                        <motion.img
+                          key={imgIdx}
+                          custom={direction}
+                          variants={slideVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{ duration: 0.28, ease: 'easeInOut' }}
+                          src={currentImage.image_url}
+                          alt={`${displayTitle} — ${imgIdx + 1}`}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          draggable={false}
+                        />
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Arrows + counter */}
                     {allImages.length > 1 && (
                       <>
                         <button
-                          onClick={() => setImgIdx((i) => (i - 1 + allImages.length) % allImages.length)}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-bg-card/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center text-text-secondary hover:text-gold transition-colors"
+                          onClick={goPrev}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+                          style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(201,169,110,0.5)'; (e.currentTarget as HTMLButtonElement).style.color = '#c9a96e'; }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
                         >
-                          <ChevronLeft size={14} />
+                          <ChevronLeft size={16} />
                         </button>
                         <button
-                          onClick={() => setImgIdx((i) => (i + 1) % allImages.length)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-bg-card/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center text-text-secondary hover:text-gold transition-colors"
+                          onClick={goNext}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+                          style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(201,169,110,0.5)'; (e.currentTarget as HTMLButtonElement).style.color = '#c9a96e'; }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
                         >
-                          <ChevronRight size={14} />
+                          <ChevronRight size={16} />
                         </button>
-                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                          {allImages.map((_, i) => (
-                            <button
-                              key={i}
-                              onClick={() => setImgIdx(i)}
-                              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                                i === imgIdx ? 'bg-gold w-4' : 'bg-text-secondary/40'
-                              }`}
-                            />
-                          ))}
+                        <div
+                          className="absolute bottom-3 right-3 z-10 text-xs font-mono px-2 py-0.5 rounded-full"
+                          style={{ background: 'rgba(0,0,0,0.6)', color: '#c9a96e' }}
+                        >
+                          {imgIdx + 1} / {allImages.length}
                         </div>
                       </>
                     )}
                   </>
                 ) : (
-                  <div className="text-7xl font-syne font-bold text-gold/10 select-none">
-                    {displayTitle.charAt(0)}
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="text-7xl font-syne font-bold text-gold/10 select-none">{displayTitle.charAt(0)}</div>
                   </div>
                 )}
               </div>
 
               {/* Right — Details */}
               <div className="md:w-1/2 overflow-y-auto p-6 md:p-8 flex flex-col gap-5">
-                {/* Header */}
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span
                       className={`inline-flex items-center gap-1.5 text-xs font-grotesk font-medium px-2 py-0.5 rounded-full ${
-                        project.status === 'in_progress'
-                          ? 'bg-amber-500/15 text-amber-400'
-                          : 'bg-green-500/15 text-green-400'
+                        project.status === 'in_progress' ? 'bg-amber-500/15 text-amber-400' : 'bg-green-500/15 text-green-400'
                       }`}
                     >
                       <span className={`w-1.5 h-1.5 rounded-full ${project.status === 'in_progress' ? 'bg-amber-400 animate-pulse' : 'bg-green-400'}`} />
                       {project.status === 'in_progress' ? t('projects.status_in_progress') : t('projects.status_completed')}
                     </span>
                   </div>
-                  <h2 className="font-syne font-bold text-2xl md:text-3xl text-text-primary">
-                    {displayTitle}
-                  </h2>
+                  <h2 className="font-syne font-bold text-2xl md:text-3xl text-text-primary">{displayTitle}</h2>
                 </div>
 
-                {/* Meta */}
                 <div className="flex flex-wrap gap-4 text-sm text-text-secondary font-grotesk">
                   {project.date_start && (
                     <div className="flex items-center gap-1.5">
@@ -158,42 +190,27 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     </div>
                   )}
                   {displayRole && (
-                    <div className="flex items-center gap-1.5">
-                      <User size={13} className="text-gold" />
-                      {displayRole}
-                    </div>
+                    <div className="flex items-center gap-1.5"><User size={13} className="text-gold" />{displayRole}</div>
                   )}
                   {displayContext && (
-                    <div className="flex items-center gap-1.5">
-                      <MapPin size={13} className="text-gold" />
-                      {displayContext}
-                    </div>
+                    <div className="flex items-center gap-1.5"><MapPin size={13} className="text-gold" />{displayContext}</div>
                   )}
                 </div>
 
-                {/* Divider */}
                 <div className="h-px bg-border" />
 
-                {/* Description */}
                 <div>
-                  <h3 className="font-grotesk font-medium text-text-secondary text-xs tracking-widest uppercase mb-3">
-                    Overview
-                  </h3>
+                  <h3 className="font-grotesk font-medium text-text-secondary text-xs tracking-widest uppercase mb-3">Overview</h3>
                   <div className="space-y-3">
                     {displayDescription?.split('\n\n').map((para, i) => (
-                      <p key={i} className="font-grotesk text-sm text-text-secondary leading-relaxed">
-                        {para}
-                      </p>
+                      <p key={i} className="font-grotesk text-sm text-text-secondary leading-relaxed">{para}</p>
                     ))}
                   </div>
                 </div>
 
-                {/* Technologies */}
                 {project.technologies.length > 0 && (
                   <div>
-                    <h3 className="font-grotesk font-medium text-text-secondary text-xs tracking-widest uppercase mb-3">
-                      Tech Stack
-                    </h3>
+                    <h3 className="font-grotesk font-medium text-text-secondary text-xs tracking-widest uppercase mb-3">Tech Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech) => (
                         <span
@@ -208,40 +225,21 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                   </div>
                 )}
 
-                {/* Links */}
                 {(project.demo_url || project.github_url || project.other_url) && (
                   <div className="flex flex-wrap gap-3 pt-2">
                     {project.demo_url && (
-                      <a
-                        href={project.demo_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-primary text-sm py-2 px-4"
-                      >
-                        <ExternalLink size={14} />
-                        {t('projects.view_demo')}
+                      <a href={project.demo_url} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm py-2 px-4">
+                        <ExternalLink size={14} />{t('projects.view_demo')}
                       </a>
                     )}
                     {project.github_url && (
-                      <a
-                        href={project.github_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-outline text-sm py-2 px-4"
-                      >
-                        <Github size={14} />
-                        {t('projects.view_code')}
+                      <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="btn-outline text-sm py-2 px-4">
+                        <Github size={14} />{t('projects.view_code')}
                       </a>
                     )}
                     {project.other_url && (
-                      <a
-                        href={project.other_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-outline text-sm py-2 px-4"
-                      >
-                        <ExternalLink size={14} />
-                        {project.other_url_label ?? 'View More'}
+                      <a href={project.other_url} target="_blank" rel="noopener noreferrer" className="btn-outline text-sm py-2 px-4">
+                        <ExternalLink size={14} />{project.other_url_label ?? 'View More'}
                       </a>
                     )}
                   </div>
