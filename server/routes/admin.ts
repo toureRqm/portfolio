@@ -16,17 +16,17 @@ router.post('/auth/login', async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Email and password are required' });
   }
   try {
-    const result = await pool.query('SELECT * FROM admins WHERE email = $1 LIMIT 1', [email]);
+    const result = await pool.query('SELECT * FROM admin_user WHERE email = $1 LIMIT 1', [email]);
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    const admin = result.rows[0] as { id: number; email: string; password_hash: string; name: string };
+    const admin = result.rows[0] as { id: number; email: string; password_hash: string };
     const valid = await bcrypt.compare(password, admin.password_hash);
     if (!valid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     const token = jwt.sign({ id: admin.id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
-    return res.json({ token, admin: { id: admin.id, email: admin.email, name: admin.name } });
+    return res.json({ token, admin: { id: admin.id, email: admin.email, name: admin.email } });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Internal server error' });
@@ -41,9 +41,10 @@ router.post('/auth/logout', (_req: Request, res: Response) => {
 // GET /api/auth/me
 router.get('/auth/me', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
-    const result = await pool.query('SELECT id, email, name FROM admins WHERE id = $1', [req.adminId]);
+    const result = await pool.query('SELECT id, email FROM admin_user WHERE id = $1', [req.adminId]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Admin not found' });
-    return res.json(result.rows[0]);
+    const row = result.rows[0] as { id: number; email: string };
+    return res.json({ id: row.id, email: row.email, name: row.email });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Internal server error' });
@@ -584,13 +585,13 @@ router.put('/admin/settings/password', requireAuth, async (req: AuthRequest, res
     return res.status(400).json({ error: 'New password must be at least 6 characters' });
   }
   try {
-    const result = await pool.query('SELECT * FROM admins WHERE id = $1', [req.adminId]);
+    const result = await pool.query('SELECT * FROM admin_user WHERE id = $1', [req.adminId]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Admin not found' });
     const admin = result.rows[0] as { password_hash: string };
     const valid = await bcrypt.compare(currentPassword, admin.password_hash);
     if (!valid) return res.status(401).json({ error: 'Current password is incorrect' });
     const hash = await bcrypt.hash(newPassword, 12);
-    await pool.query('UPDATE admins SET password_hash = $1 WHERE id = $2', [hash, req.adminId]);
+    await pool.query('UPDATE admin_user SET password_hash = $1 WHERE id = $2', [hash, req.adminId]);
     return res.json({ success: true });
   } catch (err) {
     console.error(err);
