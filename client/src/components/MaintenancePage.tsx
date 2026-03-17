@@ -259,7 +259,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
         .maint-h1 {
           font-family: 'Syne', sans-serif;
           font-weight: 700;
-          font-size: clamp(2.8rem, 5.5vw, 7rem);
+          font-size: clamp(2.8rem, 4.5vw, 7rem);
           line-height: 1.0;
           margin-bottom: 0.2em;
           color: #e8e3dc;
@@ -420,7 +420,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           <div>
             <p className="maint-label">{t('maintenance.label')}</p>
             <h1 className="maint-h1">
-              Abdou <br />Rahmane<br />
+              Abdou Rahmane<br />
               <span>Touré</span>
             </h1>
             <p className="maint-subtitle">{t('maintenance.subtitle')}</p>
