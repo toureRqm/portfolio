@@ -60,11 +60,14 @@ if (process.env.NODE_ENV === 'production') {
 
   // Maintenance middleware — runs before static React files
   app.use(async (req, res, next) => {
-    // Pass through API, uploads, and static asset requests
+    // Pass through API, uploads, static media, and any file with an extension
+    // (Vite JS/CSS chunks live under /assets/, plus favicons, manifests, etc.)
     if (
       req.path.startsWith('/api') ||
       req.path.startsWith('/uploads') ||
-      req.path.startsWith('/static')
+      req.path.startsWith('/static') ||
+      req.path.startsWith('/assets') ||
+      /\.\w{1,6}$/.test(req.path)
     ) {
       return next();
     }
