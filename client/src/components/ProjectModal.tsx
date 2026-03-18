@@ -109,7 +109,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
               >
                 {currentImage ? (
                   <>
-                    <div className="relative w-full overflow-hidden" style={{ height: '100%', maxHeight: '60vh' }}>
+                    <div className="absolute inset-0 overflow-hidden">
                       <AnimatePresence initial={false} custom={direction} mode="popLayout">
                         <motion.img
                           key={imgIdx}
