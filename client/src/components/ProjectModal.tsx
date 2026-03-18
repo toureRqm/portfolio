@@ -16,10 +16,13 @@ const slideVariants = {
   exit: (dir: number) => ({ x: dir >= 0 ? '-100%' : '100%', opacity: 0 }),
 };
 
+const AUTO_SLIDE_MS = 4000;
+
 export default function ProjectModal({ projectId, onClose }: ProjectModalProps) {
   const { data: project, loading } = useApi<Project>(`/api/projects/${projectId}`);
   const [imgIdx, setImgIdx] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [timerKey, setTimerKey] = useState(0);
   const { t, pick } = useTranslation();
 
   const allImages = project
@@ -33,13 +36,26 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
     if (allImages.length <= 1) return;
     setDirection(1);
     setImgIdx((i) => (i + 1) % allImages.length);
+    setTimerKey((k) => k + 1);
   };
 
   const goPrev = () => {
     if (allImages.length <= 1) return;
     setDirection(-1);
     setImgIdx((i) => (i - 1 + allImages.length) % allImages.length);
+    setTimerKey((k) => k + 1);
   };
+
+  // Auto-slide
+  useEffect(() => {
+    if (allImages.length <= 1) return;
+    const id = setInterval(() => {
+      setDirection(1);
+      setImgIdx((i) => (i + 1) % allImages.length);
+    }, AUTO_SLIDE_MS);
+    return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timerKey, allImages.length]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -146,6 +162,16 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                           style={{ background: 'rgba(0,0,0,0.55)', color: '#c9a96e' }}
                         >
                           {imgIdx + 1} / {allImages.length}
+                        </div>
+                        {/* Progress bar */}
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 z-10">
+                          <motion.div
+                            key={`${imgIdx}-${timerKey}`}
+                            className="h-full bg-gold"
+                            initial={{ width: '0%' }}
+                            animate={{ width: '100%' }}
+                            transition={{ duration: AUTO_SLIDE_MS / 1000, ease: 'linear' }}
+                          />
                         </div>
                       </>
                     )}
