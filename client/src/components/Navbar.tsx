@@ -11,6 +11,7 @@ interface NavbarProps {
 export default function Navbar({ profile }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const { lang, setLang } = useLanguage();
   const { t } = useTranslation();
 
@@ -25,6 +26,35 @@ export default function Navbar({ profile }: NavbarProps) {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Active section detection
+  useEffect(() => {
+    const ids = navLinks.map((l) => l.href.slice(1));
+    const observers: IntersectionObserver[] = [];
+    const visibleMap: Record<string, boolean> = {};
+
+    const update = () => {
+      const active = ids.find((id) => visibleMap[id]) ?? '';
+      setActiveSection(active);
+    };
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          visibleMap[id] = entry.isIntersecting;
+          update();
+        },
+        { threshold: 0.25 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -58,17 +88,24 @@ export default function Navbar({ profile }: NavbarProps) {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="font-grotesk text-sm text-text-secondary hover:text-gold transition-colors duration-300 tracking-wide relative group"
-            >
-              {t(link.labelKey)}
-              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.href.slice(1);
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className={`font-grotesk text-sm transition-colors duration-300 tracking-wide relative group ${
+                  isActive ? 'text-gold' : 'text-text-secondary hover:text-gold'
+                }`}
+              >
+                {t(link.labelKey)}
+                <span className={`absolute -bottom-0.5 left-0 h-px bg-gold transition-all duration-300 ${
+                  isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                }`} />
+              </a>
+            );
+          })}
           <a
             href={profile?.cv_url ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
             target="_blank"
@@ -107,16 +144,23 @@ export default function Navbar({ profile }: NavbarProps) {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden bg-bg-secondary/95 backdrop-blur-md border-t border-border px-6 py-4 flex flex-col gap-4">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="font-grotesk text-text-secondary hover:text-gold transition-colors duration-300 py-1"
-            >
-              {t(link.labelKey)}
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.href.slice(1);
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className={`font-grotesk transition-colors duration-300 py-1 border-b ${
+                  isActive
+                    ? 'text-gold border-gold/40'
+                    : 'text-text-secondary hover:text-gold border-transparent'
+                }`}
+              >
+                {t(link.labelKey)}
+              </a>
+            );
+          })}
           <a
             href={profile?.cv_url ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
             target="_blank"

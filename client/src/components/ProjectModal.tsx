@@ -46,6 +46,15 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
     setTimerKey((k) => k + 1);
   };
 
+  // Preload all images as soon as they're available
+  useEffect(() => {
+    allImages.forEach(({ image_url }) => {
+      const img = new Image();
+      img.src = image_url;
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allImages.length]);
+
   // Auto-slide
   useEffect(() => {
     if (allImages.length <= 1) return;
