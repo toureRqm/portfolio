@@ -79,11 +79,16 @@ export default function Navbar({ profile }: NavbarProps) {
         <a
           href="#hero"
           onClick={(e) => handleNavClick(e, '#hero')}
-          className="font-syne font-700 text-lg text-text-primary hover:text-gold transition-colors duration-300"
-          style={{ fontWeight: 700 }}
+          className="flex items-center hover:opacity-80 transition-opacity duration-300"
         >
-          {profile?.name?.split(' ')[0] ?? 'Abdourahmane'}
-          <span className="text-gold italic font-normal"> Touré</span>
+          {profile?.logo_url ? (
+            <img src={profile.logo_url} alt={profile.name} className="h-8 w-auto object-contain" />
+          ) : (
+            <span className="font-syne text-lg text-text-primary" style={{ fontWeight: 700 }}>
+              {profile?.name?.split(' ')[0] ?? 'Abdourahmane'}
+              <span className="text-gold italic font-normal"> Touré</span>
+            </span>
+          )}
         </a>
 
         {/* Desktop Nav */}

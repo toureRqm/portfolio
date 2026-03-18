@@ -90,6 +90,8 @@ export interface Profile {
   linkedin_url: string | null;
   github_url: string | null;
   twitter_url: string | null;
+  logo_url: string | null;
+  favicon_url: string | null;
   maintenance_mode: boolean;
   maintenance_message: string | null;
   maintenance_message_fr: string | null;

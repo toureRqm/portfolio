@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -19,6 +19,15 @@ import ProtectedRoute from './admin/ProtectedRoute';
 function PortfolioPublic() {
   const { data: profile, loading } = useApi<Profile>('/api/profile');
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+
+  // Apply custom favicon from DB
+  useEffect(() => {
+    const link = document.getElementById('favicon') as HTMLLinkElement | null;
+    if (link && profile?.favicon_url) {
+      link.href = profile.favicon_url;
+      link.type = 'image/x-icon';
+    }
+  }, [profile?.favicon_url]);
 
   // Check if admin is logged in (token set in localStorage by admin panel)
   const isAdminLoggedIn = !!localStorage.getItem('admin_token');

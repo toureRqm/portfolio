@@ -104,6 +104,54 @@ router.post('/admin/profile/photo', requireAuth, upload.single('photo'), async (
   }
 });
 
+// POST /api/admin/profile/logo
+router.post('/admin/profile/logo', requireAuth, upload.single('logo'), async (req: AuthRequest, res: Response) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const url = `/uploads/${req.file.filename}`;
+  try {
+    await pool.query('UPDATE profile SET logo_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
+    return res.json({ url });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE /api/admin/profile/logo
+router.delete('/admin/profile/logo', requireAuth, async (_req: AuthRequest, res: Response) => {
+  try {
+    await pool.query('UPDATE profile SET logo_url = NULL, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)');
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/admin/profile/favicon
+router.post('/admin/profile/favicon', requireAuth, upload.single('favicon'), async (req: AuthRequest, res: Response) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const url = `/uploads/${req.file.filename}`;
+  try {
+    await pool.query('UPDATE profile SET favicon_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
+    return res.json({ url });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE /api/admin/profile/favicon
+router.delete('/admin/profile/favicon', requireAuth, async (_req: AuthRequest, res: Response) => {
+  try {
+    await pool.query('UPDATE profile SET favicon_url = NULL, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)');
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // POST /api/admin/profile/cv
 router.post('/admin/profile/cv', requireAuth, upload.single('cv'), async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });

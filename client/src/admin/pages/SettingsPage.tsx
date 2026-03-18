@@ -1,6 +1,6 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
-import { Loader2, Shield, Lock, FileText } from 'lucide-react';
+import { Loader2, Shield, Lock, FileText, ImagePlus, Trash2, Palette } from 'lucide-react';
 import { useAdminApi } from '../hooks/useAdminApi';
 import type { Profile } from '../../types';
 
@@ -22,6 +22,15 @@ const focusStyle = {
 
 export default function SettingsPage() {
   const { data: profile, refetch } = useAdminApi<Profile>('/api/admin/profile');
+
+  // Branding
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [faviconUrl, setFaviconUrl] = useState<string | null>(null);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [faviconUploading, setFaviconUploading] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const faviconInputRef = useRef<HTMLInputElement>(null);
+
   const [maintenance, setMaintenance] = useState(false);
   const [maintenanceSaving, setMaintenanceSaving] = useState(false);
 
@@ -39,11 +48,51 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (profile) {
+      setLogoUrl(profile.logo_url);
+      setFaviconUrl(profile.favicon_url);
       setMaintenance(profile.maintenance_mode);
       setMaintMsgEn(profile.maintenance_message ?? '');
       setMaintMsgFr(profile.maintenance_message_fr ?? '');
     }
   }, [profile]);
+
+  const handleLogoUpload = async (file: File) => {
+    setLogoUploading(true);
+    const fd = new FormData();
+    fd.append('logo', file);
+    try {
+      const { data } = await axios.post<{ url: string }>('/api/admin/profile/logo', fd);
+      setLogoUrl(data.url);
+      refetch();
+    } finally {
+      setLogoUploading(false);
+    }
+  };
+
+  const handleLogoDelete = async () => {
+    await axios.delete('/api/admin/profile/logo');
+    setLogoUrl(null);
+    refetch();
+  };
+
+  const handleFaviconUpload = async (file: File) => {
+    setFaviconUploading(true);
+    const fd = new FormData();
+    fd.append('favicon', file);
+    try {
+      const { data } = await axios.post<{ url: string }>('/api/admin/profile/favicon', fd);
+      setFaviconUrl(data.url);
+      refetch();
+    } finally {
+      setFaviconUploading(false);
+    }
+  };
+
+  const handleFaviconDelete = async () => {
+    await axios.delete('/api/admin/profile/favicon');
+    setFaviconUrl(null);
+    refetch();
+  };
 
   const handleSaveMaintContent = async (e: FormEvent) => {
     e.preventDefault();
@@ -102,6 +151,104 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-xl space-y-6">
+
+      {/* Branding */}
+      <div className="p-6 rounded-xl" style={{ background: '#16161d', border: '1px solid #2a2a35' }}>
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: '#c9a96e20' }}>
+            <Palette size={18} style={{ color: '#c9a96e' }} />
+          </div>
+          <h3 className="font-syne font-bold text-white">Branding</h3>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          {/* Logo */}
+          <div>
+            <p className="text-xs font-medium mb-2" style={{ color: '#9ca3af' }}>Logo (navbar)</p>
+            <div
+              className="relative rounded-lg overflow-hidden flex items-center justify-center mb-2"
+              style={{ height: '80px', background: '#0a0a0f', border: '1px solid #2a2a35' }}
+            >
+              {logoUrl ? (
+                <>
+                  <img src={logoUrl} alt="Logo" className="max-h-full max-w-full object-contain p-2" />
+                  <button
+                    onClick={handleLogoDelete}
+                    className="absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center transition-opacity"
+                    style={{ background: '#ef444490' }}
+                    title="Remove logo"
+                  >
+                    <Trash2 size={11} style={{ color: '#fff' }} />
+                  </button>
+                </>
+              ) : (
+                <span className="text-xs" style={{ color: '#4b5563' }}>No logo — uses name</span>
+              )}
+            </div>
+            <input
+              ref={logoInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0])}
+            />
+            <button
+              onClick={() => logoInputRef.current?.click()}
+              disabled={logoUploading}
+              className="w-full flex items-center justify-center gap-2 py-1.5 rounded-lg text-xs font-medium transition-opacity"
+              style={{ background: '#c9a96e20', color: '#c9a96e', border: '1px solid #c9a96e40', opacity: logoUploading ? 0.6 : 1 }}
+            >
+              {logoUploading ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
+              {logoUrl ? 'Replace' : 'Upload logo'}
+            </button>
+          </div>
+
+          {/* Favicon */}
+          <div>
+            <p className="text-xs font-medium mb-2" style={{ color: '#9ca3af' }}>Favicon (browser tab)</p>
+            <div
+              className="relative rounded-lg overflow-hidden flex items-center justify-center mb-2"
+              style={{ height: '80px', background: '#0a0a0f', border: '1px solid #2a2a35' }}
+            >
+              {faviconUrl ? (
+                <>
+                  <img src={faviconUrl} alt="Favicon" className="w-10 h-10 object-contain" />
+                  <button
+                    onClick={handleFaviconDelete}
+                    className="absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center transition-opacity"
+                    style={{ background: '#ef444490' }}
+                    title="Remove favicon"
+                  >
+                    <Trash2 size={11} style={{ color: '#fff' }} />
+                  </button>
+                </>
+              ) : (
+                <div className="flex flex-col items-center gap-1">
+                  <img src="/favicon.svg" alt="Default favicon" className="w-8 h-8" />
+                  <span className="text-xs" style={{ color: '#4b5563' }}>Default</span>
+                </div>
+              )}
+            </div>
+            <input
+              ref={faviconInputRef}
+              type="file"
+              accept="image/*,.ico,.svg"
+              className="hidden"
+              onChange={(e) => e.target.files?.[0] && handleFaviconUpload(e.target.files[0])}
+            />
+            <button
+              onClick={() => faviconInputRef.current?.click()}
+              disabled={faviconUploading}
+              className="w-full flex items-center justify-center gap-2 py-1.5 rounded-lg text-xs font-medium transition-opacity"
+              style={{ background: '#c9a96e20', color: '#c9a96e', border: '1px solid #c9a96e40', opacity: faviconUploading ? 0.6 : 1 }}
+            >
+              {faviconUploading ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
+              {faviconUrl ? 'Replace' : 'Upload favicon'}
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Maintenance Mode */}
       <div className="p-6 rounded-xl" style={{ background: '#16161d', border: '1px solid #2a2a35' }}>
         <div className="flex items-center gap-3 mb-4">
