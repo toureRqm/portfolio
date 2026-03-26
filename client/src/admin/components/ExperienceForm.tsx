@@ -1,7 +1,8 @@
 import { useState, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
-import { X, Plus, Loader2 } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import type { Experience, Technology } from '../../types';
+import TechPicker from './TechPicker';
 
 interface ExperienceFormProps {
   experience?: Experience | null;
@@ -58,22 +59,6 @@ export default function ExperienceForm({ experience, onSaved, onCancel }: Experi
   const [descriptionFr, setDescriptionFr] = useState(experience?.description_fr ?? '');
   const [isVisible, setIsVisible] = useState(experience?.is_visible ?? true);
   const [technologies, setTechnologies] = useState<Technology[]>(experience?.technologies ?? []);
-  const [techInput, setTechInput] = useState('');
-
-  const addTech = () => {
-    const name = techInput.trim();
-    if (!name) return;
-    if (technologies.some((t) => t.name.toLowerCase() === name.toLowerCase())) {
-      setTechInput('');
-      return;
-    }
-    setTechnologies([...technologies, { id: 0, name, color: '#888888' }]);
-    setTechInput('');
-  };
-
-  const removeTech = (name: string) => {
-    setTechnologies(technologies.filter((t) => t.name !== name));
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -185,29 +170,7 @@ export default function ExperienceForm({ experience, onSaved, onCancel }: Experi
           </div>
 
           <Field label="Technologies">
-            <div className="flex gap-2 mb-2">
-              <input
-                value={techInput}
-                onChange={(e) => setTechInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTech(); } }}
-                placeholder="React, Node.js..."
-                style={INPUT_STYLE}
-                {...focusStyle}
-              />
-              <button type="button" onClick={addTech} className="px-3 py-2 rounded-lg flex-shrink-0" style={{ background: '#c9a96e', color: '#000' }}>
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {technologies.map((tech) => (
-                <span key={tech.name} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs" style={{ background: '#2a2a35', color: '#e5e7eb' }}>
-                  {tech.name}
-                  <button type="button" onClick={() => removeTech(tech.name)} className="hover:text-red-400 transition-colors">
-                    <X size={11} />
-                  </button>
-                </span>
-              ))}
-            </div>
+            <TechPicker selected={technologies} onChange={setTechnologies} />
           </Field>
 
           <div className="flex items-center gap-3">

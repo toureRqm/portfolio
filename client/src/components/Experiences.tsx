@@ -90,9 +90,12 @@ function ExperienceCard({ exp, index, isLeft }: { exp: Experience; index: number
               {exp.technologies.map((tech) => (
                 <span
                   key={tech.id}
-                  className="tech-badge"
-                  style={{ backgroundColor: tech.color + '20', color: tech.color }}
+                  className="tech-badge flex items-center gap-1"
+                  style={{ backgroundColor: tech.color + '20', color: tech.color, border: `1px solid ${tech.color}35` }}
                 >
+                  {tech.icon_url && (
+                    <img src={tech.icon_url} alt="" className="w-3.5 h-3.5 object-contain flex-shrink-0" />
+                  )}
                   {tech.name}
                 </span>
               ))}

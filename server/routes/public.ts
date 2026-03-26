@@ -24,7 +24,7 @@ router.get('/projects', async (_req: Request, res: Response) => {
     const projectsResult = await pool.query(
       `SELECT p.*,
         COALESCE(
-          json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color))
+          json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color, 'icon_url', t.icon_url))
           FILTER (WHERE t.id IS NOT NULL), '[]'
         ) AS technologies
        FROM projects p
@@ -48,7 +48,7 @@ router.get('/projects/:id', async (req: Request, res: Response) => {
     const projectResult = await pool.query(
       `SELECT p.*,
         COALESCE(
-          json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color))
+          json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color, 'icon_url', t.icon_url))
           FILTER (WHERE t.id IS NOT NULL), '[]'
         ) AS technologies,
         COALESCE(
@@ -79,7 +79,7 @@ router.get('/experiences', async (_req: Request, res: Response) => {
     const result = await pool.query(
       `SELECT e.*,
         COALESCE(
-          json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color))
+          json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color, 'icon_url', t.icon_url))
           FILTER (WHERE t.id IS NOT NULL), '[]'
         ) AS technologies
        FROM experiences e

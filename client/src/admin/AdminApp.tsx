@@ -8,6 +8,7 @@ import ExperiencesPage from './pages/ExperiencesPage';
 import SkillsPage from './pages/SkillsPage';
 import MessagesPage from './pages/MessagesPage';
 import SettingsPage from './pages/SettingsPage';
+import TechnologiesPage from './pages/TechnologiesPage';
 
 export default function AdminApp() {
   return (
@@ -22,6 +23,7 @@ export default function AdminApp() {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="experiences" element={<ExperiencesPage />} />
+            <Route path="technologies" element={<TechnologiesPage />} />
             <Route path="skills" element={<SkillsPage />} />
             <Route path="messages" element={<MessagesPage />} />
             <Route path="settings" element={<SettingsPage />} />

@@ -175,7 +175,7 @@ router.post('/admin/profile/cv', requireAuth, upload.single('cv'), async (req: A
 const projectWithTechAndImages = `
   SELECT p.*,
     COALESCE(
-      json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color))
+      json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color, 'icon_url', t.icon_url))
       FILTER (WHERE t.id IS NOT NULL), '[]'
     ) AS technologies,
     COALESCE(
@@ -394,7 +394,7 @@ router.put('/admin/projects/reorder', requireAuth, async (req: AuthRequest, res:
 const expWithTech = `
   SELECT e.*,
     COALESCE(
-      json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color))
+      json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'color', t.color, 'icon_url', t.icon_url))
       FILTER (WHERE t.id IS NOT NULL), '[]'
     ) AS technologies
   FROM experiences e
@@ -529,6 +529,83 @@ router.put('/admin/experiences/reorder', requireAuth, async (req: AuthRequest, r
       await pool.query('UPDATE experiences SET sort_order = $1 WHERE id = $2', [i + 1, ids[i]]);
     }
     return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// ─── TECHNOLOGIES LIBRARY ─────────────────────────────────────────────────────
+
+// GET /api/admin/technologies
+router.get('/admin/technologies', requireAuth, async (_req: AuthRequest, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM technologies ORDER BY name ASC');
+    return res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/admin/technologies
+router.post('/admin/technologies', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { name, color } = req.body as { name: string; color: string };
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+  try {
+    const result = await pool.query(
+      'INSERT INTO technologies (name, color) VALUES ($1, $2) RETURNING *',
+      [name.trim(), color || '#888888']
+    );
+    return res.status(201).json(result.rows[0]);
+  } catch (err: any) {
+    if (err.code === '23505') return res.status(409).json({ error: 'Technology already exists' });
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// PUT /api/admin/technologies/:id
+router.put('/admin/technologies/:id', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const { name, color } = req.body as { name: string; color: string };
+  try {
+    const result = await pool.query(
+      'UPDATE technologies SET name = $1, color = $2 WHERE id = $3 RETURNING *',
+      [name, color, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Technology not found' });
+    return res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE /api/admin/technologies/:id
+router.delete('/admin/technologies/:id', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM project_technologies WHERE technology_id = $1', [id]);
+    await pool.query('DELETE FROM experience_technologies WHERE technology_id = $1', [id]);
+    const result = await pool.query('DELETE FROM technologies WHERE id = $1 RETURNING id', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Technology not found' });
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/admin/technologies/:id/icon
+router.post('/admin/technologies/:id/icon', requireAuth, upload.single('icon'), async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  try {
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/technologies' });
+    const url = result.secure_url;
+    await pool.query('UPDATE technologies SET icon_url = $1 WHERE id = $2', [url, id]);
+    return res.json({ url });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Internal server error' });

@@ -1,7 +1,8 @@
 import { useState, FormEvent, useRef } from 'react';
 import axios, { AxiosError } from 'axios';
-import { X, Plus, Loader2, Upload, ImagePlus } from 'lucide-react';
+import { X, Loader2, Upload, ImagePlus } from 'lucide-react';
 import type { Project, ProjectImage, Technology } from '../../types';
+import TechPicker from './TechPicker';
 
 interface ProjectFormProps {
   project?: Project | null;
@@ -60,7 +61,6 @@ export default function ProjectForm({ project, onSaved, onCancel }: ProjectFormP
   const [coverImage, setCoverImage] = useState(project?.cover_image ?? '');
   const [isVisible, setIsVisible] = useState(project?.is_visible ?? true);
   const [technologies, setTechnologies] = useState<Technology[]>(project?.technologies ?? []);
-  const [techInput, setTechInput] = useState('');
 
   const [coverUploading, setCoverUploading] = useState(false);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -68,16 +68,6 @@ export default function ProjectForm({ project, onSaved, onCancel }: ProjectFormP
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>(project?.images ?? []);
   const [galleryUploading, setGalleryUploading] = useState(false);
   const galleryInputRef = useRef<HTMLInputElement>(null);
-
-  const addTech = () => {
-    const name = techInput.trim();
-    if (!name) return;
-    if (technologies.some((t) => t.name.toLowerCase() === name.toLowerCase())) { setTechInput(''); return; }
-    setTechnologies([...technologies, { id: 0, name, color: '#888888' }]);
-    setTechInput('');
-  };
-
-  const removeTech = (name: string) => setTechnologies(technologies.filter((t) => t.name !== name));
 
   const handleCoverUpload = async (file: File) => {
     if (!isEdit) { setError('Save the project first, then upload images.'); return; }
@@ -299,24 +289,7 @@ export default function ProjectForm({ project, onSaved, onCancel }: ProjectFormP
 
           {/* Technologies */}
           <Field label="Technologies">
-            <div className="flex gap-2 mb-2">
-              <input value={techInput} onChange={(e) => setTechInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTech(); } }}
-                placeholder="React, Node.js, TypeScript..." style={INPUT_STYLE}
-                onFocus={(e) => (e.currentTarget.style.borderColor = '#c9a96e')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = '#2a2a35')} />
-              <button type="button" onClick={addTech} className="px-3 py-2 rounded-lg flex-shrink-0" style={{ background: '#c9a96e', color: '#000' }}>
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {technologies.map((tech) => (
-                <span key={tech.name} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs" style={{ background: '#2a2a35', color: '#e5e7eb' }}>
-                  {tech.name}
-                  <button type="button" onClick={() => removeTech(tech.name)} className="hover:text-red-400 transition-colors"><X size={11} /></button>
-                </span>
-              ))}
-            </div>
+            <TechPicker selected={technologies} onChange={setTechnologies} />
           </Field>
 
           {/* Visible toggle */}

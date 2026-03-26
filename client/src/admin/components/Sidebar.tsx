@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Settings,
   LogOut,
+  Layers,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -16,6 +17,7 @@ const navItems = [
   { to: '/admin/profile', label: 'Profile', icon: User },
   { to: '/admin/projects', label: 'Projects', icon: FolderOpen },
   { to: '/admin/experiences', label: 'Experiences', icon: Briefcase },
+  { to: '/admin/technologies', label: 'Technologies', icon: Layers },
   { to: '/admin/skills', label: 'Skills', icon: Cpu },
   { to: '/admin/messages', label: 'Messages', icon: MessageSquare },
   { to: '/admin/settings', label: 'Settings', icon: Settings },

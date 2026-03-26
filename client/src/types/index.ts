@@ -2,6 +2,7 @@ export interface Technology {
   id: number;
   name: string;
   color: string;
+  icon_url?: string | null;
 }
 
 export interface ProjectImage {
