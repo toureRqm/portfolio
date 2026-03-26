@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../config/db';
 import { requireAuth, AuthRequest } from '../middleware/auth';
 import { upload } from '../config/upload';
+import { uploadToCloudinary } from '../config/cloudinary';
 
 const router = Router();
 
@@ -94,8 +95,9 @@ router.put('/admin/profile', requireAuth, async (req: AuthRequest, res: Response
 // POST /api/admin/profile/photo
 router.post('/admin/profile/photo', requireAuth, upload.single('photo'), async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  const url = `/uploads/${req.file.filename}`;
   try {
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/profile' });
+    const url = result.secure_url;
     await pool.query('UPDATE profile SET photo_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });
   } catch (err) {
@@ -107,8 +109,9 @@ router.post('/admin/profile/photo', requireAuth, upload.single('photo'), async (
 // POST /api/admin/profile/logo
 router.post('/admin/profile/logo', requireAuth, upload.single('logo'), async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  const url = `/uploads/${req.file.filename}`;
   try {
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/profile' });
+    const url = result.secure_url;
     await pool.query('UPDATE profile SET logo_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });
   } catch (err) {
@@ -131,8 +134,9 @@ router.delete('/admin/profile/logo', requireAuth, async (_req: AuthRequest, res:
 // POST /api/admin/profile/favicon
 router.post('/admin/profile/favicon', requireAuth, upload.single('favicon'), async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  const url = `/uploads/${req.file.filename}`;
   try {
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/profile' });
+    const url = result.secure_url;
     await pool.query('UPDATE profile SET favicon_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });
   } catch (err) {
@@ -155,8 +159,9 @@ router.delete('/admin/profile/favicon', requireAuth, async (_req: AuthRequest, r
 // POST /api/admin/profile/cv
 router.post('/admin/profile/cv', requireAuth, upload.single('cv'), async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  const url = `/uploads/${req.file.filename}`;
   try {
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/cv', resource_type: 'raw' });
+    const url = result.secure_url;
     await pool.query('UPDATE profile SET cv_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });
   } catch (err) {
@@ -320,8 +325,9 @@ router.delete('/admin/projects/:id', requireAuth, async (req: AuthRequest, res: 
 router.post('/admin/projects/:id/cover', requireAuth, upload.single('cover'), async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  const url = `/uploads/${req.file.filename}`;
   try {
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/projects' });
+    const url = result.secure_url;
     await pool.query('UPDATE projects SET cover_image = $1, updated_at = NOW() WHERE id = $2', [url, id]);
     return res.json({ url });
   } catch (err) {
@@ -340,7 +346,8 @@ router.post('/admin/projects/:id/images', requireAuth, upload.array('images', 10
     let sortOrder = (maxOrder.rows[0].m as number) + 1;
     const inserted = [];
     for (const file of files) {
-      const url = `/uploads/${file.filename}`;
+      const result = await uploadToCloudinary(file.buffer, { folder: 'portfolio/projects' });
+      const url = result.secure_url;
       const r = await pool.query(
         'INSERT INTO project_images (project_id, image_url, sort_order) VALUES ($1, $2, $3) RETURNING *',
         [id, url, sortOrder++]
