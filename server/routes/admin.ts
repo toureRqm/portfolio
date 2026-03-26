@@ -617,7 +617,12 @@ router.post('/admin/technologies/:id/icon', requireAuth, upload.single('icon'), 
 // GET /api/admin/skills
 router.get('/admin/skills', requireAuth, async (_req: AuthRequest, res: Response) => {
   try {
-    const result = await pool.query('SELECT * FROM skills ORDER BY category, sort_order ASC');
+    const result = await pool.query(
+      `SELECT s.*, t.icon_url, t.color
+       FROM skills s
+       LEFT JOIN technologies t ON s.technology_id = t.id
+       ORDER BY s.category, s.sort_order ASC`
+    );
     return res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -627,14 +632,14 @@ router.get('/admin/skills', requireAuth, async (_req: AuthRequest, res: Response
 
 // POST /api/admin/skills
 router.post('/admin/skills', requireAuth, async (req: AuthRequest, res: Response) => {
-  const { name, category, level, icon_name, is_visible } = req.body as Record<string, unknown>;
+  const { name, category, level, icon_name, is_visible, technology_id } = req.body as Record<string, unknown>;
   try {
     const maxOrder = await pool.query('SELECT COALESCE(MAX(sort_order), 0) AS m FROM skills WHERE category = $1', [category]);
     const sortOrder = (maxOrder.rows[0].m as number) + 1;
     const result = await pool.query(
-      `INSERT INTO skills (name, category, level, icon_name, is_visible, sort_order)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [name, category, level || 1, icon_name || '', is_visible ?? true, sortOrder]
+      `INSERT INTO skills (name, category, level, icon_name, is_visible, sort_order, technology_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [name, category, level || 1, icon_name || '', is_visible ?? true, sortOrder, technology_id || null]
     );
     return res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -646,12 +651,12 @@ router.post('/admin/skills', requireAuth, async (req: AuthRequest, res: Response
 // PUT /api/admin/skills/:id
 router.put('/admin/skills/:id', requireAuth, async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const { name, category, level, icon_name, is_visible } = req.body as Record<string, unknown>;
+  const { name, category, level, icon_name, is_visible, technology_id } = req.body as Record<string, unknown>;
   try {
     const result = await pool.query(
-      `UPDATE skills SET name=$1, category=$2, level=$3, icon_name=$4, is_visible=$5
-       WHERE id=$6 RETURNING *`,
-      [name, category, level, icon_name, is_visible, id]
+      `UPDATE skills SET name=$1, category=$2, level=$3, icon_name=$4, is_visible=$5, technology_id=$6
+       WHERE id=$7 RETURNING *`,
+      [name, category, level, icon_name, is_visible, technology_id || null, id]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Skill not found' });
     return res.json(result.rows[0]);

@@ -64,6 +64,9 @@ export interface Skill {
   icon_name: string;
   sort_order: number;
   is_visible: boolean;
+  technology_id?: number | null;
+  icon_url?: string | null;
+  color?: string | null;
 }
 
 export interface SkillsGrouped {

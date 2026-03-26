@@ -100,9 +100,13 @@ router.get('/experiences', async (_req: Request, res: Response) => {
 router.get('/skills', async (_req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM skills WHERE is_visible = true ORDER BY category, sort_order ASC`
+      `SELECT s.id, s.name, s.category, s.level, s.icon_name, s.sort_order, s.is_visible, s.technology_id,
+              t.icon_url, t.color
+       FROM skills s
+       LEFT JOIN technologies t ON s.technology_id = t.id
+       WHERE s.is_visible = true
+       ORDER BY s.category, s.sort_order ASC`
     );
-    // Group by category
     const grouped: Record<string, typeof result.rows> = {};
     for (const skill of result.rows) {
       if (!grouped[skill.category]) grouped[skill.category] = [];

@@ -6,9 +6,10 @@ import type { Technology } from '../../types';
 interface TechPickerProps {
   selected: Technology[];
   onChange: (techs: Technology[]) => void;
+  single?: boolean;
 }
 
-export default function TechPicker({ selected, onChange }: TechPickerProps) {
+export default function TechPicker({ selected, onChange, single }: TechPickerProps) {
   const [library, setLibrary] = useState<Technology[]>([]);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -22,7 +23,10 @@ export default function TechPicker({ selected, onChange }: TechPickerProps) {
   const isSelected = (id: number) => selected.some((t) => t.id === id);
 
   const toggle = (tech: Technology) => {
-    if (isSelected(tech.id)) {
+    if (single) {
+      onChange(isSelected(tech.id) ? [] : [tech]);
+      setOpen(false);
+    } else if (isSelected(tech.id)) {
       onChange(selected.filter((t) => t.id !== tech.id));
     } else {
       onChange([...selected, tech]);
