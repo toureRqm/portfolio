@@ -184,14 +184,13 @@ function CardBody({
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ scale: 1.02, y: -3 }}
-      className="group relative rounded-2xl p-5 cursor-default"
+      className="group relative rounded-2xl cursor-default w-full"
       style={{
         background: 'linear-gradient(135deg, #111120 0%, #0d0d18 100%)',
         border: '1px solid #c9a96e22',
         boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
         transition: 'border-color 0.3s, box-shadow 0.3s',
-        maxWidth: 420,
-        width: '100%',
+        padding: 'clamp(1rem, 1.8vw, 2rem)',
       }}
     >
       {/* Hover glow border */}
@@ -211,40 +210,50 @@ function CardBody({
 
       {/* Date badge */}
       <div className="inline-flex items-center gap-1.5 mb-3">
-        <Calendar size={11} style={{ color: '#c9a96e' }} />
+        <Calendar size={13} style={{ color: '#c9a96e' }} />
         <span
-          className="font-grotesk text-xs font-medium"
-          style={{ color: '#c9a96e' }}
+          className="font-grotesk font-medium"
+          style={{ color: '#c9a96e', fontSize: 'clamp(0.72rem, 0.9vw, 1rem)' }}
         >
           {dateRange}
         </span>
       </div>
 
       {/* Job title */}
-      <h3 className="font-syne font-bold text-white text-base leading-tight mb-1">
+      <h3
+        className="font-syne font-bold text-white leading-tight mb-1.5"
+        style={{ fontSize: 'clamp(1rem, 1.5vw, 1.7rem)' }}
+      >
         {displayJobTitle}
       </h3>
 
       {/* Company */}
-      <p className="font-grotesk font-semibold text-sm mb-2.5" style={{ color: '#c9a96e' }}>
+      <p
+        className="font-grotesk font-semibold mb-3"
+        style={{ color: '#c9a96e', fontSize: 'clamp(0.85rem, 1.05vw, 1.15rem)' }}
+      >
         {exp.company}
       </p>
 
       {/* Meta: location + work type */}
-      <div className="flex flex-wrap items-center gap-3 mb-3">
+      <div className="flex flex-wrap items-center gap-3 mb-4">
         {exp.location && (
-          <span className="flex items-center gap-1 font-grotesk text-xs text-text-secondary">
-            <MapPin size={10} style={{ color: '#c9a96e80' }} />
+          <span
+            className="flex items-center gap-1.5 font-grotesk text-text-secondary"
+            style={{ fontSize: 'clamp(0.72rem, 0.85vw, 0.95rem)' }}
+          >
+            <MapPin size={11} style={{ color: '#c9a96e80' }} />
             {exp.location}
           </span>
         )}
         {exp.work_type && (
           <span
-            className="font-grotesk text-xs px-2 py-0.5 rounded-full"
+            className="font-grotesk px-2.5 py-0.5 rounded-full"
             style={{
               background: '#c9a96e14',
               border: '1px solid #c9a96e30',
               color: '#c9a96e',
+              fontSize: 'clamp(0.72rem, 0.85vw, 0.95rem)',
             }}
           >
             {WORK_TYPE_LABELS[exp.work_type] ?? exp.work_type}
@@ -254,13 +263,14 @@ function CardBody({
 
       {/* Bullets */}
       {bullets.length > 0 && (
-        <ul className="space-y-1.5 mb-4">
+        <ul className="space-y-2 mb-5">
           {bullets.map((bullet, i) => (
             <li
               key={i}
-              className="flex gap-2 font-grotesk text-xs text-text-secondary leading-relaxed"
+              className="flex gap-2.5 font-grotesk text-text-secondary leading-relaxed"
+              style={{ fontSize: 'clamp(0.8rem, 0.95vw, 1.05rem)' }}
             >
-              <span className="flex-shrink-0 mt-1.5 w-1 h-1 rounded-full" style={{ background: '#c9a96e80' }} />
+              <span className="flex-shrink-0 mt-[0.45em] w-1.5 h-1.5 rounded-full" style={{ background: '#c9a96e80' }} />
               <span>{bullet.replace(/^[•\-]\s*/, '')}</span>
             </li>
           ))}
@@ -281,6 +291,7 @@ function CardBody({
                 backgroundColor: tech.color + '20',
                 color: tech.color,
                 border: `1px solid ${tech.color}35`,
+                fontSize: 'clamp(0.68rem, 0.8vw, 0.88rem)',
               }}
             >
               {tech.icon_url && (
@@ -303,10 +314,10 @@ function SkeletonCard({ isLeft }: { isLeft: boolean }) {
     <div className="relative md:grid md:grid-cols-[1fr_auto_1fr] flex items-start gap-5">
       <div className={`hidden md:block ${isLeft ? '' : ''}`}>
         {isLeft && (
-          <div className="flex justify-end pr-10">
+          <div className="flex justify-end pr-10 w-full">
             <div
-              className="rounded-2xl p-5 animate-pulse space-y-3"
-              style={{ width: 380, background: '#111120', border: '1px solid #1e1e2e' }}
+              className="rounded-2xl p-5 animate-pulse space-y-3 w-full"
+              style={{ background: '#111120', border: '1px solid #1e1e2e' }}
             >
               <div className="h-3 bg-border rounded w-2/5" />
               <div className="h-4 bg-border rounded w-3/4" />
@@ -323,10 +334,10 @@ function SkeletonCard({ isLeft }: { isLeft: boolean }) {
       </div>
       <div>
         {!isLeft && (
-          <div className="pl-10">
+          <div className="pl-10 w-full">
             <div
-              className="rounded-2xl p-5 animate-pulse space-y-3"
-              style={{ width: 380, background: '#111120', border: '1px solid #1e1e2e' }}
+              className="rounded-2xl p-5 animate-pulse space-y-3 w-full"
+              style={{ background: '#111120', border: '1px solid #1e1e2e' }}
             >
               <div className="h-3 bg-border rounded w-2/5" />
               <div className="h-4 bg-border rounded w-3/4" />
