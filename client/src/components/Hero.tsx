@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowDown, Download } from 'lucide-react';
 import type { Profile } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HeroProps {
   profile: Profile | null;
@@ -39,6 +40,7 @@ function useTypewriter(texts: string[], speed = 60, pauseMs = 2000) {
 
 export default function Hero({ profile, profileLoading }: HeroProps) {
   const { t, typewriterItems, pick } = useTranslation();
+  const { lang } = useLanguage();
   const texts = typewriterItems();
   const typewriterText = useTypewriter(texts);
   const heroRef = useRef<HTMLElement>(null);
@@ -178,7 +180,7 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
               <ArrowDown size={16} />
             </button>
             <a
-              href={profile?.cv_url ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
+              href={(lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline"

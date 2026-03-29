@@ -36,6 +36,7 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [photoUploading, setPhotoUploading] = useState(false);
   const [cvUploading, setCvUploading] = useState(false);
+  const [cvFrUploading, setCvFrUploading] = useState(false);
 
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
@@ -52,6 +53,7 @@ export default function ProfilePage() {
   const [twitter, setTwitter] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [cvUrl, setCvUrl] = useState('');
+  const [cvUrlFr, setCvUrlFr] = useState('');
 
   useEffect(() => {
     if (!profile) return;
@@ -70,6 +72,7 @@ export default function ProfilePage() {
     setTwitter(profile.twitter_url ?? '');
     setPhotoUrl(profile.photo_url ?? '');
     setCvUrl(profile.cv_url ?? '');
+    setCvUrlFr(profile.cv_url_fr ?? '');
   }, [profile]);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -129,6 +132,23 @@ export default function ProfilePage() {
     }
   };
 
+  const uploadCvFr = async (file: File) => {
+    setCvFrUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('cv', file);
+      const { data } = await axios.post<{ url: string }>('/api/admin/profile/cv-fr', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setCvUrlFr(data.url);
+      refetch();
+    } catch {
+      setError('CV (FR) upload failed');
+    } finally {
+      setCvFrUploading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -140,7 +160,8 @@ export default function ProfilePage() {
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
       {/* Photo + CV uploads */}
-      <div className="grid grid-cols-2 gap-6 p-6 rounded-xl" style={{ background: '#16161d', border: '1px solid #2a2a35' }}>
+      <div className="grid grid-cols-3 gap-6 p-6 rounded-xl" style={{ background: '#16161d', border: '1px solid #2a2a35' }}>
+        {/* Photo */}
         <div>
           <p className="text-sm font-medium text-white mb-3">Profile Photo</p>
           <div className="flex items-start gap-4">
@@ -167,23 +188,48 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* CV EN */}
         <div>
-          <p className="text-sm font-medium text-white mb-3">CV (PDF)</p>
-          <div className="flex items-center gap-4">
+          <p className="text-sm font-medium text-white mb-1">CV English (PDF)</p>
+          <p className="text-xs mb-3" style={{ color: '#6b7280' }}>Used when site language is EN</p>
+          <div className="flex flex-col gap-2">
             {cvUrl && (
-              <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="text-sm" style={{ color: '#c9a96e' }}>
-                View current CV
+              <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="text-xs" style={{ color: '#c9a96e' }}>
+                View current EN CV
               </a>
             )}
             <label
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors w-fit"
               style={{ background: '#2a2a35', color: '#9ca3af', border: '1px solid #3a3a45' }}
               onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
               onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
             >
               {cvUploading ? <Loader2 size={14} className="animate-spin" /> : null}
-              Upload CV PDF
+              Upload CV (EN)
               <input type="file" accept=".pdf" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadCv(f); }} />
+            </label>
+          </div>
+        </div>
+
+        {/* CV FR */}
+        <div>
+          <p className="text-sm font-medium text-white mb-1">CV Français (PDF)</p>
+          <p className="text-xs mb-3" style={{ color: '#6b7280' }}>Used when site language is FR</p>
+          <div className="flex flex-col gap-2">
+            {cvUrlFr && (
+              <a href={cvUrlFr} target="_blank" rel="noopener noreferrer" className="text-xs" style={{ color: '#c9a96e' }}>
+                View current FR CV
+              </a>
+            )}
+            <label
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors w-fit"
+              style={{ background: '#2a2a35', color: '#9ca3af', border: '1px solid #3a3a45' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+            >
+              {cvFrUploading ? <Loader2 size={14} className="animate-spin" /> : null}
+              Upload CV (FR)
+              <input type="file" accept=".pdf" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadCvFr(f); }} />
             </label>
           </div>
         </div>

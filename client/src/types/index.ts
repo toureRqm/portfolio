@@ -89,6 +89,7 @@ export interface Profile {
   about_text_fr: string | null;
   photo_url: string | null;
   cv_url: string | null;
+  cv_url_fr: string | null;
   years_experience: number;
   projects_count: number;
   email: string;
