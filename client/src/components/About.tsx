@@ -69,47 +69,14 @@ export default function About({ profile, profileLoading }: AboutProps) {
       </div>
 
       <div className="w-full px-[10%] relative">
-        <div className="grid md:grid-cols-2 gap-16 items-start">
+        <div className="grid md:grid-cols-2 gap-16 items-stretch">
 
-          {/* ─── Text ─── */}
+          {/* ─── Left column: stats + code card ─── */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7 }}
-          >
-            <p className="section-label mb-4">{t('about.section_label')}</p>
-            <h2 className="section-title mb-8">
-              Building the web,{' '}
-              <span className="text-gold italic">one stack at a time</span>
-            </h2>
-
-            {profileLoading ? (
-              <div className="space-y-3">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="h-4 bg-border rounded animate-pulse" style={{ width: `${80 + i * 4}%` }} />
-                ))}
-              </div>
-            ) : paragraphs.length > 0 ? (
-              <div className="space-y-4">
-                {paragraphs.map((para, i) => (
-                  <p key={i} className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.2rem)' }}>{para}</p>
-                ))}
-              </div>
-            ) : (
-              <p className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.2rem)' }}>
-                Passionate Full Stack JavaScript Developer with 4+ years of experience building modern web
-                and mobile applications. I specialize in React, Node.js, and TypeScript, crafting scalable
-                solutions from concept to deployment.
-              </p>
-            )}
-          </motion.div>
-
-          {/* ─── Right column ─── */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-6 h-full"
           >
             {/* Compact stats — 3 in a row */}
             <div className="grid grid-cols-3 gap-4">
@@ -129,24 +96,24 @@ export default function About({ profile, profileLoading }: AboutProps) {
               ))}
             </div>
 
-            {/* Code snippet card */}
+            {/* Code snippet card — flex-1 fills remaining height */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.6 }}
-              className="rounded-xl overflow-hidden"
+              className="rounded-xl overflow-hidden flex flex-col flex-1"
               style={{ background: '#0a0a0f', border: '1px solid #2a2a35' }}
             >
               {/* Window chrome */}
-              <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid #2a2a35' }}>
+              <div className="flex items-center gap-2 px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid #2a2a35' }}>
                 <div className="w-3 h-3 rounded-full" style={{ background: '#ef4444' }} />
                 <div className="w-3 h-3 rounded-full" style={{ background: '#f59e0b' }} />
                 <div className="w-3 h-3 rounded-full" style={{ background: '#22c55e' }} />
                 <span className="ml-2 text-xs font-mono" style={{ color: '#4b5563' }}>stack.ts</span>
               </div>
 
-              {/* Code */}
-              <div className="p-5 font-mono text-sm leading-relaxed">
+              {/* Code — flex-1 grows to fill card */}
+              <div className="p-5 font-mono text-sm leading-relaxed flex-1 flex flex-col justify-center">
                 <div style={{ color: '#6b7280' }}>{'// my tech stack'}</div>
                 <div className="mt-1">
                   <span style={{ color: '#60a5fa' }}>const </span>
@@ -178,6 +145,47 @@ export default function About({ profile, profileLoading }: AboutProps) {
                 </div>
               </div>
             </motion.div>
+          </motion.div>
+
+          {/* ─── Right column: text ─── */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex flex-col"
+          >
+            <p className="section-label mb-4">{t('about.section_label')}</p>
+            <h2 className="section-title mb-8">
+              Building the web,{' '}
+              <span className="text-gold italic">one stack at a time</span>
+            </h2>
+
+            {profileLoading ? (
+              <div className="space-y-3">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-4 bg-border rounded animate-pulse" style={{ width: `${80 + i * 4}%` }} />
+                ))}
+              </div>
+            ) : paragraphs.length > 0 ? (
+              <div
+                className="space-y-4 overflow-y-auto pr-2"
+                style={{
+                  flex: 1,
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#2a2a35 transparent',
+                }}
+              >
+                {paragraphs.map((para, i) => (
+                  <p key={i} className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.2rem)' }}>{para}</p>
+                ))}
+              </div>
+            ) : (
+              <p className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.2rem)' }}>
+                Passionate Full Stack JavaScript Developer with 4+ years of experience building modern web
+                and mobile applications. I specialize in React, Node.js, and TypeScript, crafting scalable
+                solutions from concept to deployment.
+              </p>
+            )}
           </motion.div>
 
         </div>
