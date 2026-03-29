@@ -172,7 +172,7 @@ export default function Skills() {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative">
+      <div className="w-full px-[10%] relative">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

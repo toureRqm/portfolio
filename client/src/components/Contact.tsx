@@ -85,7 +85,7 @@ export default function Contact({ profile }: ContactProps) {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative">
+      <div className="w-full px-[10%] relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -96,12 +96,12 @@ export default function Contact({ profile }: ContactProps) {
           <h2 className="section-title mb-4">
             Let's <span className="text-gold italic">Work Together</span>
           </h2>
-          <p className="font-grotesk text-text-secondary max-w-xl mx-auto">
+          <p className="font-grotesk text-text-secondary mx-auto" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.15rem)', maxWidth: '52ch' }}>
             {t('contact.tagline')}
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
           {/* Form */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -208,10 +208,10 @@ export default function Contact({ profile }: ContactProps) {
             className="space-y-8"
           >
             <div>
-              <h3 className="font-syne font-bold text-xl text-text-primary mb-3">
+              <h3 className="font-syne font-bold text-text-primary mb-3" style={{ fontSize: 'clamp(1.1rem, 1.6vw, 1.8rem)' }}>
                 Let's connect
               </h3>
-              <p className="font-grotesk text-text-secondary leading-relaxed text-sm">
+              <p className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.85rem, 1vw, 1.1rem)' }}>
                 Whether you have a project in mind, a job opportunity, or just want to say hi —
                 my inbox is always open. I'll try to get back to you within 24 hours.
               </p>

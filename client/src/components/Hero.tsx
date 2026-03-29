@@ -101,7 +101,7 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-gold/3 blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 w-full grid md:grid-cols-2 gap-12 md:gap-20 items-center py-20">
+      <div className="relative z-10 w-full px-[10%] grid md:grid-cols-2 gap-12 md:gap-20 items-center py-20">
         {/* Left — Text content */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -123,7 +123,7 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7 }}
             className="font-syne font-bold leading-none mb-3"
-            style={{ fontSize: 'clamp(3rem, 6vw, 6.5rem)' }}
+            style={{ fontSize: 'clamp(2.8rem, 5vw, 7rem)', letterSpacing: '-0.02em' }}
           >
             {profileLoading ? (
               <div className="h-20 bg-border rounded animate-pulse" />
@@ -142,7 +142,8 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="font-grotesk font-light text-text-secondary tracking-widest uppercase text-sm md:text-base mb-8"
+            className="font-grotesk font-light text-text-secondary tracking-widest uppercase mb-8"
+            style={{ fontSize: 'clamp(0.85rem, 1.4vw, 1.5rem)' }}
           >
             {profileLoading ? (
               <span className="block h-4 w-64 bg-border rounded animate-pulse" />
@@ -158,7 +159,8 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="font-grotesk text-text-secondary text-base md:text-lg mb-10 min-h-[1.75rem]"
+            className="font-grotesk text-text-secondary mb-10 min-h-[1.75rem]"
+            style={{ fontSize: 'clamp(0.95rem, 1.3vw, 1.4rem)' }}
           >
             <span className="text-text-primary">{typewriterText}</span>
             <span className="inline-block w-0.5 h-5 bg-gold ml-0.5 animate-pulse align-middle" />

@@ -68,7 +68,7 @@ export default function About({ profile, profileLoading }: AboutProps) {
           style={{ background: 'radial-gradient(circle, #c9a96e 0%, transparent 70%)' }} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative">
+      <div className="w-full px-[10%] relative">
         <div className="grid md:grid-cols-2 gap-16 items-start">
 
           {/* ─── Text ─── */}
@@ -92,11 +92,11 @@ export default function About({ profile, profileLoading }: AboutProps) {
             ) : paragraphs.length > 0 ? (
               <div className="space-y-4">
                 {paragraphs.map((para, i) => (
-                  <p key={i} className="font-grotesk text-text-secondary leading-relaxed text-base">{para}</p>
+                  <p key={i} className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.2rem)' }}>{para}</p>
                 ))}
               </div>
             ) : (
-              <p className="font-grotesk text-text-secondary leading-relaxed">
+              <p className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.2rem)' }}>
                 Passionate Full Stack JavaScript Developer with 4+ years of experience building modern web
                 and mobile applications. I specialize in React, Node.js, and TypeScript, crafting scalable
                 solutions from concept to deployment.
