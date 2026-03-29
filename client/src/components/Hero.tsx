@@ -181,9 +181,8 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
               <ArrowDown size={16} />
             </button>
             <a
-              href={profile ? `/api/cv/${lang}` : '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={(lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
+              download={lang === 'fr' ? 'CV-Toure-Abdourahmane-FR.pdf' : 'CV-Toure-Abdourahmane-EN.pdf'}
               className="btn-outline"
             >
               <Download size={16} />

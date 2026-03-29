@@ -113,9 +113,8 @@ export default function Navbar({ profile }: NavbarProps) {
             );
           })}
           <a
-            href={profile ? `/api/cv/${lang}` : '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={(lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
+            download={lang === 'fr' ? 'CV-Toure-Abdourahmane-FR.pdf' : 'CV-Toure-Abdourahmane-EN.pdf'}
             className="btn-outline text-sm py-2 px-4"
           >
             Resume
@@ -168,9 +167,8 @@ export default function Navbar({ profile }: NavbarProps) {
             );
           })}
           <a
-            href={profile ? `/api/cv/${lang}` : '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={(lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
+            download={lang === 'fr' ? 'CV-Toure-Abdourahmane-FR.pdf' : 'CV-Toure-Abdourahmane-EN.pdf'}
             className="btn-outline text-sm w-fit"
           >
             Resume

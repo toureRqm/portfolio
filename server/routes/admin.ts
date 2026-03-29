@@ -3,8 +3,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool from '../config/db';
 import { requireAuth, AuthRequest } from '../middleware/auth';
-import { upload } from '../config/upload';
+import { upload, createCvUpload } from '../config/upload';
 import { uploadToCloudinary } from '../config/cloudinary';
+
+const cvEnUpload = createCvUpload('en');
+const cvFrUpload = createCvUpload('fr');
 
 const router = Router();
 
@@ -157,11 +160,10 @@ router.delete('/admin/profile/favicon', requireAuth, async (_req: AuthRequest, r
 });
 
 // POST /api/admin/profile/cv
-router.post('/admin/profile/cv', requireAuth, upload.single('cv'), async (req: AuthRequest, res: Response) => {
+router.post('/admin/profile/cv', requireAuth, cvEnUpload, async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/cv', resource_type: 'auto', public_id: 'cv-en' });
-    const url = result.secure_url;
+    const url = '/uploads/cv/en/cv.pdf';
     await pool.query('UPDATE profile SET cv_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });
   } catch (err) {
@@ -171,11 +173,10 @@ router.post('/admin/profile/cv', requireAuth, upload.single('cv'), async (req: A
 });
 
 // POST /api/admin/profile/cv-fr
-router.post('/admin/profile/cv-fr', requireAuth, upload.single('cv'), async (req: AuthRequest, res: Response) => {
+router.post('/admin/profile/cv-fr', requireAuth, cvFrUpload, async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/cv', resource_type: 'auto', public_id: 'cv-fr' });
-    const url = result.secure_url;
+    const url = '/uploads/cv/fr/cv.pdf';
     await pool.query('UPDATE profile SET cv_url_fr = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });
   } catch (err) {

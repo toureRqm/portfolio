@@ -4,28 +4,6 @@ import pool from '../config/db';
 
 const router = Router();
 
-// GET /api/cv/:lang — redirect to Cloudinary URL with fl_attachment to force download
-router.get('/cv/:lang', async (req: Request, res: Response) => {
-  const { lang } = req.params;
-  if (lang !== 'en' && lang !== 'fr') return res.status(400).json({ error: 'Invalid language' });
-  try {
-    const result = await pool.query('SELECT cv_url, cv_url_fr FROM profile LIMIT 1');
-    const row = result.rows[0];
-    const cvUrl: string | null = lang === 'fr' ? row?.cv_url_fr : row?.cv_url;
-    if (!cvUrl) return res.status(404).json({ error: 'CV not found' });
-
-    const attachment = lang === 'fr' ? 'CV-Toure-Abdourahmane-FR' : 'CV-Toure-Abdourahmane-EN';
-    const downloadUrl = cvUrl.includes('cloudinary.com')
-      ? cvUrl.replace('/upload/', `/upload/fl_attachment:${attachment}/`)
-      : cvUrl;
-
-    return res.redirect(302, downloadUrl);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 // GET /api/profile
 router.get('/profile', async (_req: Request, res: Response) => {
   try {
