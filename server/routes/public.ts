@@ -1,8 +1,37 @@
+import https from 'https';
 import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import pool from '../config/db';
 
 const router = Router();
+
+// GET /api/cv/:lang — proxy PDF download with correct filename and content-type
+router.get('/cv/:lang', async (req: Request, res: Response) => {
+  const { lang } = req.params;
+  if (lang !== 'en' && lang !== 'fr') return res.status(400).json({ error: 'Invalid language' });
+  try {
+    const result = await pool.query('SELECT cv_url, cv_url_fr FROM profile LIMIT 1');
+    const row = result.rows[0];
+    const cvUrl: string | null = lang === 'fr' ? row?.cv_url_fr : row?.cv_url;
+    if (!cvUrl) return res.status(404).json({ error: 'CV not found' });
+
+    const filename = lang === 'fr' ? 'CV-Toure-Abdourahmane-FR.pdf' : 'CV-Toure-Abdourahmane-EN.pdf';
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    https.get(cvUrl, (stream) => {
+      if (stream.statusCode !== 200) {
+        res.status(502).json({ error: 'Failed to fetch CV from storage' });
+        stream.resume();
+        return;
+      }
+      stream.pipe(res);
+    }).on('error', () => res.status(500).json({ error: 'Internal server error' }));
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // GET /api/profile
 router.get('/profile', async (_req: Request, res: Response) => {
