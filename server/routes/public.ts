@@ -16,20 +16,23 @@ router.get('/cv/:lang', async (req: Request, res: Response) => {
     if (!cvUrl) return res.status(404).json({ error: 'CV not found' });
 
     const filename = lang === 'fr' ? 'CV-Toure-Abdourahmane-FR.pdf' : 'CV-Toure-Abdourahmane-EN.pdf';
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
     https.get(cvUrl, (stream) => {
       if (stream.statusCode !== 200) {
-        res.status(502).json({ error: 'Failed to fetch CV from storage' });
         stream.resume();
+        if (!res.headersSent) res.status(502).json({ error: 'Failed to fetch CV from storage' });
         return;
       }
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
       stream.pipe(res);
-    }).on('error', () => res.status(500).json({ error: 'Internal server error' }));
+    }).on('error', (err) => {
+      console.error(err);
+      if (!res.headersSent) res.status(500).json({ error: 'Internal server error' });
+    });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Internal server error' });
+    if (!res.headersSent) return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
