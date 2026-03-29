@@ -182,7 +182,8 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
             </button>
             <a
               href={profile ? `/api/cv/${lang}` : '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
-              download
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-outline"
             >
               <Download size={16} />

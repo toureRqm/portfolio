@@ -114,7 +114,8 @@ export default function Navbar({ profile }: NavbarProps) {
           })}
           <a
             href={profile ? `/api/cv/${lang}` : '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
-            download
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn-outline text-sm py-2 px-4"
           >
             Resume
@@ -168,7 +169,8 @@ export default function Navbar({ profile }: NavbarProps) {
           })}
           <a
             href={profile ? `/api/cv/${lang}` : '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
-            download
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn-outline text-sm w-fit"
           >
             Resume

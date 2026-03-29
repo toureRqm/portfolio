@@ -1,11 +1,10 @@
-import https from 'https';
 import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import pool from '../config/db';
 
 const router = Router();
 
-// GET /api/cv/:lang — proxy PDF download with correct filename and content-type
+// GET /api/cv/:lang — redirect to Cloudinary URL with fl_attachment to force download
 router.get('/cv/:lang', async (req: Request, res: Response) => {
   const { lang } = req.params;
   if (lang !== 'en' && lang !== 'fr') return res.status(400).json({ error: 'Invalid language' });
@@ -15,24 +14,15 @@ router.get('/cv/:lang', async (req: Request, res: Response) => {
     const cvUrl: string | null = lang === 'fr' ? row?.cv_url_fr : row?.cv_url;
     if (!cvUrl) return res.status(404).json({ error: 'CV not found' });
 
-    const filename = lang === 'fr' ? 'CV-Toure-Abdourahmane-FR.pdf' : 'CV-Toure-Abdourahmane-EN.pdf';
+    const attachment = lang === 'fr' ? 'CV-Toure-Abdourahmane-FR' : 'CV-Toure-Abdourahmane-EN';
+    const downloadUrl = cvUrl.includes('cloudinary.com')
+      ? cvUrl.replace('/upload/', `/upload/fl_attachment:${attachment}/`)
+      : cvUrl;
 
-    https.get(cvUrl, (stream) => {
-      if (stream.statusCode !== 200) {
-        stream.resume();
-        if (!res.headersSent) res.status(502).json({ error: 'Failed to fetch CV from storage' });
-        return;
-      }
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-      stream.pipe(res);
-    }).on('error', (err) => {
-      console.error(err);
-      if (!res.headersSent) res.status(500).json({ error: 'Internal server error' });
-    });
+    return res.redirect(302, downloadUrl);
   } catch (err) {
     console.error(err);
-    if (!res.headersSent) return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
