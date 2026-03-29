@@ -11,7 +11,7 @@ interface NavbarProps {
 function cvDownloadUrl(url: string | null | undefined, filename: string, fallback: string): string {
   if (!url) return fallback;
   if (url.includes('cloudinary.com')) {
-    return url.replace('/upload/', `/upload/fl_attachment:${filename}/`);
+    return url.replace('/upload/', `/upload/fl_attachment:${filename}.pdf/`);
   }
   return url;
 }
@@ -122,7 +122,7 @@ export default function Navbar({ profile }: NavbarProps) {
           <a
             href={cvDownloadUrl(
               (lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url,
-              lang === 'fr' ? 'CV-Abdourahmane-Toure-FR' : 'CV-Abdourahmane-Toure-EN',
+              lang === 'fr' ? 'CV-Toure-Abdourahmane-FR' : 'CV-Toure-Abdourahmane-EN',
               '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'
             )}
             target="_blank"
@@ -181,7 +181,7 @@ export default function Navbar({ profile }: NavbarProps) {
           <a
             href={cvDownloadUrl(
               (lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url,
-              lang === 'fr' ? 'CV-Abdourahmane-Toure-FR' : 'CV-Abdourahmane-Toure-EN',
+              lang === 'fr' ? 'CV-Toure-Abdourahmane-FR' : 'CV-Toure-Abdourahmane-EN',
               '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'
             )}
             target="_blank"
