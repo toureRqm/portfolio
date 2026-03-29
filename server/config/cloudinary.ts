@@ -12,13 +12,14 @@ if (!process.env.CLOUDINARY_URL) {
 
 export const uploadToCloudinary = (
   fileBuffer: Buffer,
-  options: { folder?: string; resource_type?: string } = {}
+  options: { folder?: string; resource_type?: string; public_id?: string } = {}
 ): Promise<any> => {
   return new Promise((resolve, reject) => {
-    const uploadOptions = {
+    const uploadOptions: Record<string, any> = {
       folder: options.folder || 'portfolio',
       resource_type: (options.resource_type || 'auto') as any,
     };
+    if (options.public_id) uploadOptions.public_id = options.public_id;
     const stream = cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
       if (error) return reject(error);
       resolve(result);

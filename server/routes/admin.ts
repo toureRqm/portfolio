@@ -160,7 +160,7 @@ router.delete('/admin/profile/favicon', requireAuth, async (_req: AuthRequest, r
 router.post('/admin/profile/cv', requireAuth, upload.single('cv'), async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/cv', resource_type: 'raw' });
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/cv', resource_type: 'raw', public_id: 'cv-en' });
     const url = result.secure_url;
     await pool.query('UPDATE profile SET cv_url = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });
@@ -174,7 +174,7 @@ router.post('/admin/profile/cv', requireAuth, upload.single('cv'), async (req: A
 router.post('/admin/profile/cv-fr', requireAuth, upload.single('cv'), async (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   try {
-    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/cv', resource_type: 'raw' });
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/cv', resource_type: 'raw', public_id: 'cv-fr' });
     const url = result.secure_url;
     await pool.query('UPDATE profile SET cv_url_fr = $1, updated_at = NOW() WHERE id = (SELECT id FROM profile LIMIT 1)', [url]);
     return res.json({ url });

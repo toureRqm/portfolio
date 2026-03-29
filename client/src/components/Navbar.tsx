@@ -8,6 +8,14 @@ interface NavbarProps {
   profile: Profile | null;
 }
 
+function cvDownloadUrl(url: string | null | undefined, filename: string, fallback: string): string {
+  if (!url) return fallback;
+  if (url.includes('cloudinary.com')) {
+    return url.replace('/upload/', `/upload/fl_attachment:${filename}/`);
+  }
+  return url;
+}
+
 export default function Navbar({ profile }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -112,7 +120,11 @@ export default function Navbar({ profile }: NavbarProps) {
             );
           })}
           <a
-            href={(lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
+            href={cvDownloadUrl(
+              (lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url,
+              lang === 'fr' ? 'CV-Abdourahmane-Toure-FR' : 'CV-Abdourahmane-Toure-EN',
+              '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline text-sm py-2 px-4"
@@ -167,7 +179,11 @@ export default function Navbar({ profile }: NavbarProps) {
             );
           })}
           <a
-            href={(lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
+            href={cvDownloadUrl(
+              (lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url,
+              lang === 'fr' ? 'CV-Abdourahmane-Toure-FR' : 'CV-Abdourahmane-Toure-EN',
+              '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline text-sm w-fit"

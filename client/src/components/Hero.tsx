@@ -38,6 +38,14 @@ function useTypewriter(texts: string[], speed = 60, pauseMs = 2000) {
   return display;
 }
 
+function cvDownloadUrl(url: string | null | undefined, filename: string, fallback: string): string {
+  if (!url) return fallback;
+  if (url.includes('cloudinary.com')) {
+    return url.replace('/upload/', `/upload/fl_attachment:${filename}/`);
+  }
+  return url;
+}
+
 export default function Hero({ profile, profileLoading }: HeroProps) {
   const { t, typewriterItems, pick } = useTranslation();
   const { lang } = useLanguage();
@@ -180,7 +188,11 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
               <ArrowDown size={16} />
             </button>
             <a
-              href={(lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url ?? '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'}
+              href={cvDownloadUrl(
+                (lang === 'fr' ? profile?.cv_url_fr : profile?.cv_url) ?? profile?.cv_url,
+                lang === 'fr' ? 'CV-Abdourahmane-Toure-FR' : 'CV-Abdourahmane-Toure-EN',
+                '/static/media/CV-Abdourahmane-Toure-2.461aefb3.pdf'
+              )}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline"
