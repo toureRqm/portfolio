@@ -196,9 +196,9 @@ export default function Projects({ selectedProjectId, onSelectProject }: Project
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <p className="section-label mb-4">Portfolio</p>
+          <p className="section-label mb-4">{t('projects.portfolio_label')}</p>
           <h2 className="section-title">
-            Featured{' '}
+            {t('projects.featured_label')}{' '}
             <span className="text-gold italic">{t('projects.section_label')}</span>
           </h2>
         </motion.div>

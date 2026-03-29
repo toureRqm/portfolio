@@ -16,12 +16,18 @@
   },
   "about": {
     "section_label": "À Propos",
+    "title": "Construire le web,",
+    "title_italic": "une stack à la fois",
     "years_exp": "Ans d'expérience",
     "projects_delivered": "Projets livrés",
     "tech_stacks": "Stacks maîtrisées"
   },
   "skills": {
     "section_label": "Stack Technique",
+    "subtitle": "4 ans d'expérience Full Stack, du pixel au serveur.",
+    "title_prefix": "Compétences &",
+    "title_italic": "Technologies",
+    "always_learning": "Toujours en apprentissage",
     "categories": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -32,6 +38,8 @@
   },
   "projects": {
     "section_label": "Projets",
+    "portfolio_label": "Portfolio",
+    "featured_label": "Sélection",
     "view_demo": "Démo Live",
     "view_code": "Code Source",
     "status_completed": "Terminé",
@@ -42,11 +50,17 @@
   },
   "experience": {
     "section_label": "Expériences",
+    "career_label": "Carrière",
+    "work_prefix": "Mes",
     "present": "Aujourd'hui"
   },
   "contact": {
     "section_label": "Contact",
-    "tagline": "Ouvert aux missions remote — Construisons quelque chose ensemble",
+    "title": "Travaillons",
+    "title_italic": "Ensemble",
+    "tagline": "Ouvert aux missions remote. Construisons quelque chose ensemble.",
+    "connect_title": "Prenons contact",
+    "connect_body": "Que vous ayez un projet, une opportunité ou juste envie d'échanger, ma boîte mail est toujours ouverte. Je vous réponds sous 24h.",
     "name_placeholder": "Votre nom",
     "email_placeholder": "Votre email",
     "message_placeholder": "Votre message",
@@ -60,7 +74,7 @@
   "maintenance": {
     "label": "Portfolio",
     "subtitle": "Développeur Full Stack",
-    "message": "Mon portfolio est actuellement <strong>en cours de construction</strong>.<br/>Je prépare quelque chose de soigné — projets, expériences et réalisations.<br/>Revenez bientôt.",
+    "message": "Mon portfolio est actuellement <strong>en cours de construction</strong>.<br/>Je prépare quelque chose de soigné : projets, expériences et réalisations.<br/>Revenez bientôt.",
     "status": "En cours"
   }
 }

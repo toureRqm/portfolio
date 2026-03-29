@@ -94,7 +94,7 @@ export default function Contact({ profile }: ContactProps) {
         >
           <p className="section-label justify-center mb-4">{t('contact.section_label')}</p>
           <h2 className="section-title mb-4">
-            Let's <span className="text-gold italic">Work Together</span>
+            {t('contact.title')} <span className="text-gold italic">{t('contact.title_italic')}</span>
           </h2>
           <p className="font-grotesk text-text-secondary mx-auto" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.15rem)', maxWidth: '52ch' }}>
             {t('contact.tagline')}
@@ -209,11 +209,10 @@ export default function Contact({ profile }: ContactProps) {
           >
             <div>
               <h3 className="font-syne font-bold text-text-primary mb-3" style={{ fontSize: 'clamp(1.1rem, 1.6vw, 1.8rem)' }}>
-                Let's connect
+                {t('contact.connect_title')}
               </h3>
               <p className="font-grotesk text-text-secondary leading-relaxed" style={{ fontSize: 'clamp(0.85rem, 1vw, 1.1rem)' }}>
-                Whether you have a project in mind, a job opportunity, or just want to say hi —
-                my inbox is always open. I'll try to get back to you within 24 hours.
+                {t('contact.connect_body')}
               </p>
             </div>
 

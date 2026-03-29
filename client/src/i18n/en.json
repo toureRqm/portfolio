@@ -16,12 +16,18 @@
   },
   "about": {
     "section_label": "About Me",
+    "title": "Building the web,",
+    "title_italic": "one stack at a time",
     "years_exp": "Years Experience",
     "projects_delivered": "Projects Delivered",
     "tech_stacks": "Tech Stacks"
   },
   "skills": {
     "section_label": "Tech Stack",
+    "subtitle": "4 years of Full Stack experience, from pixel to server.",
+    "title_prefix": "Skills &",
+    "title_italic": "Technologies",
+    "always_learning": "Always Learning",
     "categories": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -32,6 +38,8 @@
   },
   "projects": {
     "section_label": "Projects",
+    "portfolio_label": "Portfolio",
+    "featured_label": "Featured",
     "view_demo": "Live Demo",
     "view_code": "Source Code",
     "status_completed": "Completed",
@@ -42,11 +50,17 @@
   },
   "experience": {
     "section_label": "Experience",
+    "career_label": "Career",
+    "work_prefix": "Work",
     "present": "Present"
   },
   "contact": {
     "section_label": "Contact",
-    "tagline": "Open to remote opportunities — Let's build something together",
+    "title": "Let's",
+    "title_italic": "Work Together",
+    "tagline": "Open to remote opportunities. Let's build something together.",
+    "connect_title": "Let's connect",
+    "connect_body": "Whether you have a project in mind, a job opportunity, or just want to say hi, my inbox is always open. I'll try to get back to you within 24 hours.",
     "name_placeholder": "Your name",
     "email_placeholder": "Your email",
     "message_placeholder": "Your message",
@@ -60,7 +74,7 @@
   "maintenance": {
     "label": "Portfolio",
     "subtitle": "Full Stack Developer",
-    "message": "My portfolio is currently <strong>under construction</strong>.<br/>I'm preparing something polished — projects, experiences and achievements.<br/>Come back soon.",
+    "message": "My portfolio is currently <strong>under construction</strong>.<br/>I'm preparing something polished: projects, experiences and achievements.<br/>Come back soon.",
     "status": "In Progress"
   }
 }

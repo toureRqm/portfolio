@@ -411,9 +411,9 @@ export default function Experiences() {
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <p className="section-label mb-4">Career</p>
+          <p className="section-label mb-4">{t('experience.career_label')}</p>
           <h2 className="section-title">
-            Work <span className="text-gold italic">{t('experience.section_label')}</span>
+            {t('experience.work_prefix')} <span className="text-gold italic">{t('experience.section_label')}</span>
           </h2>
         </motion.div>
 

@@ -286,16 +286,16 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <p className="section-label mb-4">{t('skills.section_label') || 'TECH STACK'}</p>
+          <p className="section-label mb-4">{t('skills.section_label')}</p>
           <h2 className="section-title mb-3">
-            Skills &amp;{' '}
-            <span className="text-gold italic">Technologies</span>
+            {t('skills.title_prefix')}{' '}
+            <span className="text-gold italic">{t('skills.title_italic')}</span>
           </h2>
           <p
             className="font-grotesk"
             style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.15rem)', color: 'rgba(255,255,255,0.32)' }}
           >
-            {t('skills.subtitle') || '4 years of Full Stack experience — from pixel to server.'}
+            {t('skills.subtitle')}
           </p>
         </motion.div>
 
@@ -342,7 +342,7 @@ export default function Skills() {
               className="font-mono tracking-widest uppercase"
               style={{ fontSize: 'clamp(0.6rem, 0.75vw, 0.78rem)', color: '#c9a96e' }}
             >
-              Always Learning
+              {t('skills.always_learning')}
             </span>
             <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, #c9a96e)' }} />
           </motion.div>

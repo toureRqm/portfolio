@@ -156,8 +156,8 @@ export default function About({ profile, profileLoading }: AboutProps) {
           >
             <p className="section-label mb-4">{t('about.section_label')}</p>
             <h2 className="section-title mb-8">
-              Building the web,{' '}
-              <span className="text-gold italic">one stack at a time</span>
+              {t('about.title')}{' '}
+              <span className="text-gold italic">{t('about.title_italic')}</span>
             </h2>
 
             {profileLoading ? (
