@@ -61,6 +61,7 @@ export interface Skill {
   name: string;
   category: 'frontend' | 'backend' | 'mobile' | 'tools';
   level: 1 | 2 | 3;
+  level_percent: number;
   icon_name: string;
   sort_order: number;
   is_visible: boolean;

@@ -100,7 +100,9 @@ router.get('/experiences', async (_req: Request, res: Response) => {
 router.get('/skills', async (_req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      `SELECT s.id, s.name, s.category, s.level, s.icon_name, s.sort_order, s.is_visible, s.technology_id,
+      `SELECT s.id, s.name, s.category, s.level,
+              COALESCE(s.level_percent, CASE s.level WHEN 1 THEN 65 WHEN 2 THEN 80 WHEN 3 THEN 92 ELSE 80 END) AS level_percent,
+              s.icon_name, s.sort_order, s.is_visible, s.technology_id,
               t.icon_url, t.color
        FROM skills s
        LEFT JOIN technologies t ON s.technology_id = t.id

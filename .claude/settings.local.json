@@ -6,7 +6,8 @@
       "Bash(npx vite:*)",
       "Bash(node_modules/.bin/tsc --noEmit)",
       "Bash(server/node_modules/.bin/tsc --noEmit -p server/tsconfig.json)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(grep -n \"level_percent\\\\|skills\\\\|ALTER\" c:/Users/abdou/Desktop/portfolio/database/*.js)"
     ]
   }
 }

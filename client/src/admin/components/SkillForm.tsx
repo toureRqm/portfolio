@@ -33,6 +33,7 @@ export default function SkillForm({ skill, onSaved, onCancel }: SkillFormProps) 
   const [name, setName] = useState(skill?.name ?? '');
   const [category, setCategory] = useState<Skill['category']>(skill?.category ?? 'frontend');
   const [level, setLevel] = useState<1 | 2 | 3>(skill?.level ?? 2);
+  const [levelPercent, setLevelPercent] = useState<number>(skill?.level_percent ?? 80);
   const [isVisible, setIsVisible] = useState(skill?.is_visible ?? true);
 
   // Link to technology library for icon
@@ -54,9 +55,9 @@ export default function SkillForm({ skill, onSaved, onCancel }: SkillFormProps) 
     const technology_id = linkedTech[0]?.id || null;
     try {
       if (isEdit) {
-        await axios.put(`/api/admin/skills/${skill!.id}`, { name, category, level, icon_name: '', is_visible: isVisible, technology_id });
+        await axios.put(`/api/admin/skills/${skill!.id}`, { name, category, level, level_percent: levelPercent, icon_name: '', is_visible: isVisible, technology_id });
       } else {
-        await axios.post('/api/admin/skills', { name, category, level, icon_name: '', is_visible: isVisible, technology_id });
+        await axios.post('/api/admin/skills', { name, category, level, level_percent: levelPercent, icon_name: '', is_visible: isVisible, technology_id });
       }
       onSaved();
     } catch (err) {
@@ -114,6 +115,25 @@ export default function SkillForm({ skill, onSaved, onCancel }: SkillFormProps) 
                 <option value={2}>2 — Proficient</option>
                 <option value={3}>3 — Expert</option>
               </select>
+            </div>
+          </div>
+
+          {/* Level percent slider */}
+          <div>
+            <label className="flex items-center justify-between text-xs font-medium mb-2" style={{ color: '#9ca3af' }}>
+              <span>Proficiency</span>
+              <span style={{ color: '#c9a96e', fontWeight: 700 }}>{levelPercent}%</span>
+            </label>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={levelPercent}
+              onChange={(e) => setLevelPercent(Number(e.target.value))}
+              style={{ width: '100%', accentColor: '#c9a96e', cursor: 'pointer' }}
+            />
+            <div className="flex justify-between text-xs mt-1" style={{ color: '#4b5563' }}>
+              <span>0%</span><span>50%</span><span>100%</span>
             </div>
           </div>
 
