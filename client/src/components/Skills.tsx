@@ -5,9 +5,10 @@ import type { SkillsGrouped, Skill } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
 const CATEGORY_CONFIG = [
-  { key: 'frontend', label: 'Frontend', accent: '#c9a96e' },
-  { key: 'backend',  label: 'Backend',  accent: '#60a5fa' },
-  { key: 'mobile',   label: 'Mobile',   accent: '#a78bfa' },
+  { key: 'frontend', label: 'Frontend',           accent: '#c9a96e' },
+  { key: 'backend',  label: 'Backend',            accent: '#60a5fa' },
+  { key: 'mobile',   label: 'Mobile',             accent: '#a78bfa' },
+  { key: 'ai',       label: 'IA & Automatisation', accent: '#34d399' },
 ];
 
 /* ─── Single skill row with animated progress bar ─── */
@@ -273,6 +274,8 @@ export default function Skills() {
           style={{ background: 'radial-gradient(circle, #60a5fa 0%, transparent 70%)' }} />
         <div className="absolute bottom-0 left-1/3 w-[280px] h-[280px] rounded-full opacity-[0.04]"
           style={{ background: 'radial-gradient(circle, #a78bfa 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] rounded-full opacity-[0.04]"
+          style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
         {/* Top line */}
         <div className="absolute top-0 left-[10%] right-[10%] h-px"
           style={{ background: 'linear-gradient(90deg, transparent, #c9a96e30, transparent)' }} />
