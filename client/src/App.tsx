@@ -49,7 +49,7 @@ function PortfolioPublic() {
           onSelectProject={setSelectedProjectId}
         />
         <Experiences />
-        <Contact profile={profile} />
+        <Contact />
       </main>
       <Footer />
     </div>

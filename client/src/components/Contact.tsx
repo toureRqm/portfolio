@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Mail, Linkedin, Github, Twitter, Globe, Instagram, Youtube, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { postContact, useApi } from '../hooks/useApi';
-import type { Profile, ContactFormData, SocialLink } from '../types';
+import type { ContactFormData, SocialLink } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -15,17 +15,13 @@ const ICON_MAP: Record<string, React.ElementType> = {
   globe: Globe,
 };
 
-interface ContactProps {
-  profile: Profile | null;
-}
-
 const INITIAL_FORM: ContactFormData = {
   sender_name: '',
   sender_email: '',
   message: '',
 };
 
-export default function Contact({ profile }: ContactProps) {
+export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: '-100px' });
   const { t } = useTranslation();
