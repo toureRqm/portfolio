@@ -1,3 +1,12 @@
+export interface SocialLink {
+  id: number;
+  label: string;
+  url: string;
+  icon_name: string;
+  sort_order: number;
+  is_visible: boolean;
+}
+
 export interface Technology {
   id: number;
   name: string;

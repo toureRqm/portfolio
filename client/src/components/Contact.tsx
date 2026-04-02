@@ -1,9 +1,19 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Mail, Linkedin, Github, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { postContact } from '../hooks/useApi';
-import type { Profile, ContactFormData } from '../types';
+import { Mail, Linkedin, Github, Twitter, Globe, Instagram, Youtube, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { postContact, useApi } from '../hooks/useApi';
+import type { Profile, ContactFormData, SocialLink } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  linkedin: Linkedin,
+  github: Github,
+  mail: Mail,
+  twitter: Twitter,
+  instagram: Instagram,
+  youtube: Youtube,
+  globe: Globe,
+};
 
 interface ContactProps {
   profile: Profile | null;
@@ -20,6 +30,7 @@ export default function Contact({ profile }: ContactProps) {
   const inView = useInView(sectionRef, { once: true, margin: '-100px' });
   const { t } = useTranslation();
 
+  const { data: socialLinks } = useApi<SocialLink[]>('/api/social-links');
   const [form, setForm] = useState<ContactFormData>(INITIAL_FORM);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -54,23 +65,6 @@ export default function Contact({ profile }: ContactProps) {
     }
   };
 
-  const socials = [
-    {
-      label: 'LinkedIn',
-      href: profile?.linkedin_url ?? 'https://www.linkedin.com/in/abdou-rahmane-toure-986358216/',
-      icon: Linkedin,
-    },
-    {
-      label: 'GitHub',
-      href: profile?.github_url ?? 'https://github.com/abdourahmane',
-      icon: Github,
-    },
-    {
-      label: 'Email',
-      href: `mailto:${profile?.email ?? 'abdourahmane.toure674@gmail.com'}`,
-      icon: Mail,
-    },
-  ];
 
   return (
     <section id="contact" ref={sectionRef} className="py-24 md:py-32 bg-bg-secondary relative overflow-hidden">
@@ -217,13 +211,17 @@ export default function Contact({ profile }: ContactProps) {
             </div>
 
             <div className="space-y-3">
-              {socials.map((social) => {
-                const Icon = social.icon;
+              {(socialLinks ?? []).map((social) => {
+                const Icon = ICON_MAP[social.icon_name] ?? Globe;
+                const isEmail = social.url.startsWith('mailto:');
+                const displayUrl = isEmail
+                  ? social.url.replace('mailto:', '')
+                  : social.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
                 return (
                   <a
-                    key={social.label}
-                    href={social.href}
-                    target={social.label !== 'Email' ? '_blank' : undefined}
+                    key={social.id}
+                    href={social.url}
+                    target={isEmail ? undefined : '_blank'}
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-3 rounded-lg border border-border bg-bg-card hover:border-gold hover:shadow-[0_0_20px_rgba(201,169,110,0.08)] transition-all duration-300 group"
                   >
@@ -234,12 +232,8 @@ export default function Contact({ profile }: ContactProps) {
                       <p className="font-grotesk font-medium text-sm text-text-primary group-hover:text-gold transition-colors duration-300">
                         {social.label}
                       </p>
-                      <p className="font-grotesk text-xs text-text-secondary">
-                        {social.label === 'Email'
-                          ? profile?.email ?? 'abdourahmane.toure674@gmail.com'
-                          : social.label === 'LinkedIn'
-                          ? 'linkedin.com/in/abdou-rahmane'
-                          : 'github.com/abdourahmane'}
+                      <p className="font-grotesk text-xs text-text-secondary truncate max-w-[18rem]">
+                        {displayUrl}
                       </p>
                     </div>
                   </a>

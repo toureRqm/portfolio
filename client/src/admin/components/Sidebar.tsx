@@ -9,6 +9,7 @@ import {
   Settings,
   LogOut,
   Layers,
+  Link2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -19,6 +20,7 @@ const navItems = [
   { to: '/admin/experiences', label: 'Experiences', icon: Briefcase },
   { to: '/admin/technologies', label: 'Technologies', icon: Layers },
   { to: '/admin/skills', label: 'Skills', icon: Cpu },
+  { to: '/admin/social-links', label: 'Social Links', icon: Link2 },
   { to: '/admin/messages', label: 'Messages', icon: MessageSquare },
   { to: '/admin/settings', label: 'Settings', icon: Settings },
 ];

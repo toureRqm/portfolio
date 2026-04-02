@@ -121,6 +121,19 @@ router.get('/skills', async (_req: Request, res: Response) => {
   }
 });
 
+// GET /api/social-links
+router.get('/social-links', async (_req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM social_links WHERE is_visible = true ORDER BY sort_order ASC'
+    );
+    return res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // POST /api/contact
 router.post(
   '/contact',

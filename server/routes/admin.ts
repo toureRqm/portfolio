@@ -799,4 +799,68 @@ router.put('/admin/settings/maintenance', requireAuth, async (req: AuthRequest, 
   }
 });
 
+// ─── SOCIAL LINKS ─────────────────────────────────────────────────────────────
+
+// GET /api/admin/social-links
+router.get('/admin/social-links', requireAuth, async (_req: AuthRequest, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM social_links ORDER BY sort_order ASC');
+    return res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/admin/social-links
+router.post('/admin/social-links', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { label, url, icon_name, sort_order, is_visible } = req.body as {
+    label: string; url: string; icon_name: string; sort_order?: number; is_visible?: boolean;
+  };
+  if (!label || !url) return res.status(400).json({ error: 'label and url are required' });
+  try {
+    const result = await pool.query(
+      `INSERT INTO social_links (label, url, icon_name, sort_order, is_visible)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [label, url, icon_name ?? 'globe', sort_order ?? 0, is_visible ?? true]
+    );
+    return res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// PUT /api/admin/social-links/:id
+router.put('/admin/social-links/:id', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const { label, url, icon_name, sort_order, is_visible } = req.body as {
+    label: string; url: string; icon_name: string; sort_order?: number; is_visible?: boolean;
+  };
+  try {
+    const result = await pool.query(
+      `UPDATE social_links SET label=$1, url=$2, icon_name=$3, sort_order=$4, is_visible=$5
+       WHERE id=$6 RETURNING *`,
+      [label, url, icon_name ?? 'globe', sort_order ?? 0, is_visible ?? true, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    return res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE /api/admin/social-links/:id
+router.delete('/admin/social-links/:id', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM social_links WHERE id = $1', [id]);
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;

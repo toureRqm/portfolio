@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import ProjectsPage from './pages/ProjectsPage';
 import ExperiencesPage from './pages/ExperiencesPage';
 import SkillsPage from './pages/SkillsPage';
+import SocialLinksPage from './pages/SocialLinksPage';
 import MessagesPage from './pages/MessagesPage';
 import SettingsPage from './pages/SettingsPage';
 import TechnologiesPage from './pages/TechnologiesPage';
@@ -25,6 +26,7 @@ export default function AdminApp() {
             <Route path="experiences" element={<ExperiencesPage />} />
             <Route path="technologies" element={<TechnologiesPage />} />
             <Route path="skills" element={<SkillsPage />} />
+            <Route path="social-links" element={<SocialLinksPage />} />
             <Route path="messages" element={<MessagesPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>
