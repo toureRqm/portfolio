@@ -158,7 +158,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Photo + CV uploads */}
       <div className="grid grid-cols-3 gap-6 p-6 rounded-xl" style={{ background: '#16161d', border: '1px solid #2a2a35' }}>
         {/* Photo */}

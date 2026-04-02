@@ -17,7 +17,7 @@ export default function AdminApp() {
       <Sidebar />
       <div style={{ marginLeft: '14rem' }}>
         <TopBar />
-        <main className="p-6">
+        <main className="p-6 max-w-5xl">
           <Routes>
             <Route path="/" element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />

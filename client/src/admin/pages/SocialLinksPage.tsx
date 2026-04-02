@@ -102,7 +102,7 @@ export default function SocialLinksPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-syne font-bold text-white text-xl">Social Links</h2>
@@ -112,7 +112,7 @@ export default function SocialLinksPage() {
         </div>
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap"
           style={{ background: '#c9a96e', color: '#000' }}
         >
           <Plus size={15} />
