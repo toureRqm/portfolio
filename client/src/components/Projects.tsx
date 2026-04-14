@@ -230,8 +230,8 @@ export default function Projects({ selectedProjectId, onSelectProject }: Project
         )}
 
         {!loading && !error && projects?.length === 0 && (
-          <div className="text-center py-16 text-text-secondary">
-            <p>No projects to display yet.</p>
+          <div className="text-center py-16 text-text-secondary/60 font-grotesk text-sm">
+            <p>{t('projects.empty')}</p>
           </div>
         )}
       </div>

@@ -46,7 +46,8 @@
     "status_in_progress": "In Progress",
     "role": "Role",
     "context": "Context",
-    "period": "Period"
+    "period": "Period",
+    "empty": "projects view in progress, something dynamic is coming."
   },
   "experience": {
     "section_label": "Experience",

@@ -46,7 +46,8 @@
     "status_in_progress": "En cours",
     "role": "Rôle",
     "context": "Contexte",
-    "period": "Période"
+    "period": "Période",
+    "empty": "Affichage projets en cours de réflexion, quelque chose de dynamique arrive."
   },
   "experience": {
     "section_label": "Expériences",
