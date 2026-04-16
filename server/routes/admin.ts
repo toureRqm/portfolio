@@ -268,6 +268,21 @@ router.post('/admin/projects', requireAuth, async (req: AuthRequest, res: Respon
   }
 });
 
+// PUT /api/admin/projects/reorder  ← MUST be before /:id to avoid route conflict
+router.put('/admin/projects/reorder', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { ids } = req.body as { ids: number[] };
+  if (!Array.isArray(ids)) return res.status(400).json({ error: 'ids must be an array' });
+  try {
+    for (let i = 0; i < ids.length; i++) {
+      await pool.query('UPDATE projects SET sort_order = $1 WHERE id = $2', [i + 1, ids[i]]);
+    }
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // PUT /api/admin/projects/:id
 router.put('/admin/projects/:id', requireAuth, async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
@@ -382,21 +397,6 @@ router.delete('/admin/projects/:id/images/:imageId', requireAuth, async (req: Au
   try {
     const result = await pool.query('DELETE FROM project_images WHERE id = $1 RETURNING id', [imageId]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Image not found' });
-    return res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// PUT /api/admin/projects/reorder
-router.put('/admin/projects/reorder', requireAuth, async (req: AuthRequest, res: Response) => {
-  const { ids } = req.body as { ids: number[] };
-  if (!Array.isArray(ids)) return res.status(400).json({ error: 'ids must be an array' });
-  try {
-    for (let i = 0; i < ids.length; i++) {
-      await pool.query('UPDATE projects SET sort_order = $1 WHERE id = $2', [i + 1, ids[i]]);
-    }
     return res.json({ success: true });
   } catch (err) {
     console.error(err);
