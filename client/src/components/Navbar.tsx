@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import type { Profile } from '../types';
 import { useLanguage } from '../context/LanguageContext';
@@ -15,6 +16,8 @@ export default function Navbar({ profile }: NavbarProps) {
   const [activeSection, setActiveSection] = useState('');
   const { lang, setLang } = useLanguage();
   const { t } = useTranslation();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   const navLinks = [
     { labelKey: 'nav.about', href: '#about' },
@@ -60,11 +63,14 @@ export default function Navbar({ profile }: NavbarProps) {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-      setMenuOpen(false);
+    setMenuOpen(false);
+    if (!isHome) {
+      // Navigate to home page, browser will scroll to hash natively
+      window.location.href = '/' + href;
+      return;
     }
+    const target = document.querySelector(href);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
