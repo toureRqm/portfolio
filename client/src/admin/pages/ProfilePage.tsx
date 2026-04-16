@@ -55,7 +55,7 @@ export default function ProfilePage() {
   const [cvUrl, setCvUrl] = useState('');
   const [cvUrlFr, setCvUrlFr] = useState('');
   // Freelance fields
-  const [availabilityStatus, setAvailabilityStatus] = useState<'available' | 'on_mission' | 'closed'>('available');
+  const [availabilityStatus, setAvailabilityStatus] = useState<'available' | 'available_remote' | 'available_onsite' | 'on_mission' | 'closed'>('available');
   const [availabilityVisible, setAvailabilityVisible] = useState(true);
   const [location, setLocation] = useState('');
   const [locationVisible, setLocationVisible] = useState(true);
@@ -330,12 +330,14 @@ export default function ProfilePage() {
             <Field label="Disponibilité">
               <select
                 value={availabilityStatus}
-                onChange={(e) => setAvailabilityStatus(e.target.value as 'available' | 'on_mission' | 'closed')}
+                onChange={(e) => setAvailabilityStatus(e.target.value as 'available' | 'available_remote' | 'available_onsite' | 'on_mission' | 'closed')}
                 style={{ ...INPUT_STYLE, cursor: 'pointer' }}
                 onFocus={(e) => { e.currentTarget.style.borderColor = '#c9a96e'; }}
                 onBlur={(e) => { e.currentTarget.style.borderColor = '#2a2a35'; }}
               >
                 <option value="available">🟢 Disponible</option>
+                <option value="available_remote">🟢 Disponible en remote</option>
+                <option value="available_onsite">🟢 Disponible sur site</option>
                 <option value="on_mission">🟡 En mission</option>
                 <option value="closed">🔴 Fermé</option>
               </select>

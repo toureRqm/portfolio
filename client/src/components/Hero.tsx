@@ -236,6 +236,8 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
             {!profileLoading && profile?.availability_visible && profile?.availability_status && (() => {
               const statusMap = {
                 available: { color: '#4ade80', label: lang === 'fr' ? 'Disponible' : 'Available' },
+                available_remote: { color: '#4ade80', label: lang === 'fr' ? 'Disponible en remote' : 'Available remotely' },
+                available_onsite: { color: '#4ade80', label: lang === 'fr' ? 'Disponible sur site' : 'Available on-site' },
                 on_mission: { color: '#facc15', label: lang === 'fr' ? 'En mission' : 'On mission' },
                 closed: { color: '#f87171', label: lang === 'fr' ? 'Fermé' : 'Closed' },
               };

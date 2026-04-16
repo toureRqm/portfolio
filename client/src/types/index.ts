@@ -112,7 +112,7 @@ export interface Profile {
   maintenance_message: string | null;
   maintenance_message_fr: string | null;
   // Freelance fields
-  availability_status: 'available' | 'on_mission' | 'closed' | null;
+  availability_status: 'available' | 'available_remote' | 'available_onsite' | 'on_mission' | 'closed' | null;
   availability_visible: boolean;
   location: string | null;
   location_visible: boolean;
