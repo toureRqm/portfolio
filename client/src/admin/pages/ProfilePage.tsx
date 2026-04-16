@@ -54,6 +54,15 @@ export default function ProfilePage() {
   const [photoUrl, setPhotoUrl] = useState('');
   const [cvUrl, setCvUrl] = useState('');
   const [cvUrlFr, setCvUrlFr] = useState('');
+  // Freelance fields
+  const [availabilityStatus, setAvailabilityStatus] = useState<'available' | 'on_mission' | 'closed'>('available');
+  const [availabilityVisible, setAvailabilityVisible] = useState(true);
+  const [location, setLocation] = useState('');
+  const [locationVisible, setLocationVisible] = useState(true);
+  const [phone, setPhone] = useState('');
+  const [phoneVisible, setPhoneVisible] = useState(false);
+  const [dailyRate, setDailyRate] = useState('');
+  const [dailyRateVisible, setDailyRateVisible] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -73,6 +82,14 @@ export default function ProfilePage() {
     setPhotoUrl(profile.photo_url ?? '');
     setCvUrl(profile.cv_url ?? '');
     setCvUrlFr(profile.cv_url_fr ?? '');
+    setAvailabilityStatus(profile.availability_status ?? 'available');
+    setAvailabilityVisible(profile.availability_visible ?? true);
+    setLocation(profile.location ?? '');
+    setLocationVisible(profile.location_visible ?? true);
+    setPhone(profile.phone ?? '');
+    setPhoneVisible(profile.phone_visible ?? false);
+    setDailyRate(profile.daily_rate ?? '');
+    setDailyRateVisible(profile.daily_rate_visible ?? false);
   }, [profile]);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -86,6 +103,10 @@ export default function ProfilePage() {
         about_text: aboutText, about_text_fr: aboutTextFr || null,
         years_experience: yearsExp, projects_count: projectsCount,
         email, linkedin_url: linkedin || null, github_url: github || null, twitter_url: twitter || null,
+        availability_status: availabilityStatus, availability_visible: availabilityVisible,
+        location: location || null, location_visible: locationVisible,
+        phone: phone || null, phone_visible: phoneVisible,
+        daily_rate: dailyRate || null, daily_rate_visible: dailyRateVisible,
       });
       setSuccess(true);
       refetch();
@@ -296,6 +317,105 @@ export default function ProfilePage() {
           <Field label="Twitter/X URL">
             <input type="url" value={twitter} onChange={(e) => setTwitter(e.target.value)} style={INPUT_STYLE} placeholder="https://twitter.com/..." {...focusStyle} />
           </Field>
+        </div>
+      </div>
+
+      {/* Freelance Info */}
+      <div className="p-6 rounded-xl space-y-4" style={{ background: '#16161d', border: '1px solid #2a2a35' }}>
+        <h3 className="font-syne font-bold text-white">Infos Freelance</h3>
+
+        {/* Availability */}
+        <div className="flex items-end gap-3">
+          <div className="flex-1">
+            <Field label="Disponibilité">
+              <select
+                value={availabilityStatus}
+                onChange={(e) => setAvailabilityStatus(e.target.value as 'available' | 'on_mission' | 'closed')}
+                style={{ ...INPUT_STYLE, cursor: 'pointer' }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#c9a96e'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#2a2a35'; }}
+              >
+                <option value="available">🟢 Disponible</option>
+                <option value="on_mission">🟡 En mission</option>
+                <option value="closed">🔴 Fermé</option>
+              </select>
+            </Field>
+          </div>
+          <button
+            type="button"
+            onClick={() => setAvailabilityVisible(!availabilityVisible)}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all flex-shrink-0"
+            style={{
+              background: availabilityVisible ? '#c9a96e20' : '#2a2a35',
+              color: availabilityVisible ? '#c9a96e' : '#6b7280',
+              border: `1px solid ${availabilityVisible ? '#c9a96e' : '#3a3a45'}`,
+            }}
+          >
+            {availabilityVisible ? 'Affiché' : 'Masqué'}
+          </button>
+        </div>
+
+        {/* Location */}
+        <div className="flex items-end gap-3">
+          <div className="flex-1">
+            <Field label="Localisation">
+              <input value={location} onChange={(e) => setLocation(e.target.value)} style={INPUT_STYLE} placeholder="Paris, France" {...focusStyle} />
+            </Field>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLocationVisible(!locationVisible)}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all flex-shrink-0"
+            style={{
+              background: locationVisible ? '#c9a96e20' : '#2a2a35',
+              color: locationVisible ? '#c9a96e' : '#6b7280',
+              border: `1px solid ${locationVisible ? '#c9a96e' : '#3a3a45'}`,
+            }}
+          >
+            {locationVisible ? 'Affiché' : 'Masqué'}
+          </button>
+        </div>
+
+        {/* Phone */}
+        <div className="flex items-end gap-3">
+          <div className="flex-1">
+            <Field label="Téléphone">
+              <input value={phone} onChange={(e) => setPhone(e.target.value)} style={INPUT_STYLE} placeholder="+33 6 00 00 00 00" {...focusStyle} />
+            </Field>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPhoneVisible(!phoneVisible)}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all flex-shrink-0"
+            style={{
+              background: phoneVisible ? '#c9a96e20' : '#2a2a35',
+              color: phoneVisible ? '#c9a96e' : '#6b7280',
+              border: `1px solid ${phoneVisible ? '#c9a96e' : '#3a3a45'}`,
+            }}
+          >
+            {phoneVisible ? 'Affiché' : 'Masqué'}
+          </button>
+        </div>
+
+        {/* TJM */}
+        <div className="flex items-end gap-3">
+          <div className="flex-1">
+            <Field label="TJM (Taux Journalier Moyen)">
+              <input value={dailyRate} onChange={(e) => setDailyRate(e.target.value)} style={INPUT_STYLE} placeholder="500€/jour" {...focusStyle} />
+            </Field>
+          </div>
+          <button
+            type="button"
+            onClick={() => setDailyRateVisible(!dailyRateVisible)}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all flex-shrink-0"
+            style={{
+              background: dailyRateVisible ? '#c9a96e20' : '#2a2a35',
+              color: dailyRateVisible ? '#c9a96e' : '#6b7280',
+              border: `1px solid ${dailyRateVisible ? '#c9a96e' : '#3a3a45'}`,
+            }}
+          >
+            {dailyRateVisible ? 'Affiché' : 'Masqué'}
+          </button>
         </div>
       </div>
 

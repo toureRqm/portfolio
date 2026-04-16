@@ -9,6 +9,7 @@
     "start": "node server/dist/index.js",
     "db:migrate": "node database/migrate.js",
     "db:migrate:maintenance": "node database/migrate-maintenance.js",
+    "db:migrate:freelance": "node database/migrate-freelance-fields.js",
     "db:seed": "node database/seed.js"
   },
   "devDependencies": {

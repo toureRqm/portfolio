@@ -52,6 +52,7 @@ export interface Experience {
   job_title_fr: string | null;
   company: string;
   company_logo: string | null;
+  contract_type: string | null;
   date_start: string;
   date_end: string | null;
   location: string;
@@ -110,6 +111,15 @@ export interface Profile {
   maintenance_mode: boolean;
   maintenance_message: string | null;
   maintenance_message_fr: string | null;
+  // Freelance fields
+  availability_status: 'available' | 'on_mission' | 'closed' | null;
+  availability_visible: boolean;
+  location: string | null;
+  location_visible: boolean;
+  phone: string | null;
+  phone_visible: boolean;
+  daily_rate: string | null;
+  daily_rate_visible: boolean;
   updated_at: string;
 }
 

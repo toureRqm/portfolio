@@ -227,16 +227,39 @@ function CardBody({
         {displayJobTitle}
       </h3>
 
-      {/* Company */}
-      <p
-        className="font-grotesk font-semibold mb-3"
-        style={{ color: '#c9a96e', fontSize: 'clamp(0.85rem, 1.05vw, 1.15rem)' }}
-      >
-        {exp.company}
-      </p>
+      {/* Company + logo */}
+      <div className="flex items-center gap-2 mb-3">
+        {exp.company_logo && (
+          <img
+            src={exp.company_logo}
+            alt={exp.company}
+            className="w-6 h-6 rounded object-contain flex-shrink-0"
+            style={{ background: '#ffffff10', padding: '2px' }}
+          />
+        )}
+        <p
+          className="font-grotesk font-semibold"
+          style={{ color: '#c9a96e', fontSize: 'clamp(0.85rem, 1.05vw, 1.15rem)' }}
+        >
+          {exp.company}
+        </p>
+      </div>
 
-      {/* Meta: location + work type */}
+      {/* Meta: contract type, location, work type */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
+        {exp.contract_type && (
+          <span
+            className="font-grotesk px-2.5 py-0.5 rounded-full"
+            style={{
+              background: '#ffffff08',
+              border: '1px solid #ffffff15',
+              color: '#9ca3af',
+              fontSize: 'clamp(0.68rem, 0.8vw, 0.88rem)',
+            }}
+          >
+            {exp.contract_type}
+          </span>
+        )}
         {exp.location && (
           <span
             className="flex items-center gap-1.5 font-grotesk text-text-secondary"

@@ -75,18 +75,31 @@ router.put('/admin/profile', requireAuth, async (req: AuthRequest, res: Response
     name, title, title_fr, subtitle, subtitle_fr,
     about_text, about_text_fr, years_experience, projects_count,
     email, linkedin_url, github_url, twitter_url,
-  } = req.body as Record<string, string | number>;
+    availability_status, availability_visible,
+    location, location_visible,
+    phone, phone_visible,
+    daily_rate, daily_rate_visible,
+  } = req.body as Record<string, string | number | boolean>;
   try {
     const result = await pool.query(
       `UPDATE profile SET
         name = $1, title = $2, title_fr = $3, subtitle = $4, subtitle_fr = $5,
         about_text = $6, about_text_fr = $7, years_experience = $8, projects_count = $9,
         email = $10, linkedin_url = $11, github_url = $12, twitter_url = $13,
+        availability_status = $14, availability_visible = $15,
+        location = $16, location_visible = $17,
+        phone = $18, phone_visible = $19,
+        daily_rate = $20, daily_rate_visible = $21,
         updated_at = NOW()
        WHERE id = (SELECT id FROM profile LIMIT 1)
        RETURNING *`,
-      [name, title, title_fr, subtitle, subtitle_fr, about_text, about_text_fr,
-       years_experience, projects_count, email, linkedin_url, github_url, twitter_url]
+      [name, title, title_fr || null, subtitle, subtitle_fr || null,
+       about_text, about_text_fr || null, years_experience, projects_count,
+       email, linkedin_url || null, github_url || null, twitter_url || null,
+       availability_status || 'available', availability_visible ?? true,
+       location || null, location_visible ?? true,
+       phone || null, phone_visible ?? false,
+       daily_rate || null, daily_rate_visible ?? false]
     );
     return res.json(result.rows[0]);
   } catch (err) {
@@ -434,17 +447,18 @@ router.get('/admin/experiences', requireAuth, async (_req: AuthRequest, res: Res
 router.post('/admin/experiences', requireAuth, async (req: AuthRequest, res: Response) => {
   const {
     job_title, job_title_fr, company, date_start, date_end, location,
-    work_type, description, description_fr, is_visible, technologies,
+    work_type, contract_type, description, description_fr, is_visible, technologies,
   } = req.body as Record<string, unknown>;
   try {
     const maxOrder = await pool.query('SELECT COALESCE(MAX(sort_order), 0) AS m FROM experiences');
     const sortOrder = (maxOrder.rows[0].m as number) + 1;
     const result = await pool.query(
       `INSERT INTO experiences (job_title, job_title_fr, company, date_start, date_end, location,
-        work_type, description, description_fr, is_visible, sort_order)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
+        work_type, contract_type, description, description_fr, is_visible, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
       [job_title, job_title_fr || null, company, date_start, date_end || null, location,
-       work_type || 'on-site', description, description_fr || null, is_visible ?? true, sortOrder]
+       work_type || 'on-site', contract_type || 'freelance',
+       description, description_fr || null, is_visible ?? true, sortOrder]
     );
     const exp = result.rows[0] as { id: number };
     if (Array.isArray(technologies) && technologies.length > 0) {
@@ -480,16 +494,18 @@ router.put('/admin/experiences/:id', requireAuth, async (req: AuthRequest, res: 
   const { id } = req.params;
   const {
     job_title, job_title_fr, company, date_start, date_end, location,
-    work_type, description, description_fr, is_visible, technologies,
+    work_type, contract_type, description, description_fr, is_visible, technologies,
   } = req.body as Record<string, unknown>;
   try {
     await pool.query(
       `UPDATE experiences SET
         job_title=$1, job_title_fr=$2, company=$3, date_start=$4, date_end=$5,
-        location=$6, work_type=$7, description=$8, description_fr=$9, is_visible=$10, updated_at=NOW()
-       WHERE id=$11`,
+        location=$6, work_type=$7, contract_type=$8, description=$9, description_fr=$10,
+        is_visible=$11, updated_at=NOW()
+       WHERE id=$12`,
       [job_title, job_title_fr || null, company, date_start, date_end || null,
-       location, work_type, description, description_fr || null, is_visible, id]
+       location, work_type, contract_type || 'freelance',
+       description, description_fr || null, is_visible, id]
     );
     if (Array.isArray(technologies)) {
       await pool.query('DELETE FROM experience_technologies WHERE experience_id = $1', [id]);
@@ -528,6 +544,33 @@ router.delete('/admin/experiences/:id', requireAuth, async (req: AuthRequest, re
     await pool.query('DELETE FROM experience_technologies WHERE experience_id = $1', [id]);
     const result = await pool.query('DELETE FROM experiences WHERE id = $1 RETURNING id', [id]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Experience not found' });
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/admin/experiences/:id/logo
+router.post('/admin/experiences/:id/logo', requireAuth, upload.single('logo'), async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  try {
+    const result = await uploadToCloudinary(req.file.buffer, { folder: 'portfolio/experiences' });
+    const url = result.secure_url;
+    await pool.query('UPDATE experiences SET company_logo = $1, updated_at = NOW() WHERE id = $2', [url, id]);
+    return res.json({ url });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE /api/admin/experiences/:id/logo
+router.delete('/admin/experiences/:id/logo', requireAuth, async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  try {
+    await pool.query('UPDATE experiences SET company_logo = NULL, updated_at = NOW() WHERE id = $1', [id]);
     return res.json({ success: true });
   } catch (err) {
     console.error(err);

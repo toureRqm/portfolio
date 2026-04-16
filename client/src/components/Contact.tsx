@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Mail, Linkedin, Github, Twitter, Globe, Instagram, Youtube, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Mail, Linkedin, Github, Twitter, Globe, Instagram, Youtube, Send, CheckCircle, AlertCircle, Loader2, Phone, DollarSign } from 'lucide-react';
 import { postContact, useApi } from '../hooks/useApi';
-import type { ContactFormData, SocialLink } from '../types';
+import type { ContactFormData, Profile, SocialLink } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../context/LanguageContext';
 
 const ICON_MAP: Record<string, React.ElementType> = {
   linkedin: Linkedin,
@@ -25,8 +26,10 @@ export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: '-100px' });
   const { t } = useTranslation();
+  const { lang } = useLanguage();
 
   const { data: socialLinks } = useApi<SocialLink[]>('/api/social-links');
+  const { data: profile } = useApi<Profile>('/api/profile');
   const [form, setForm] = useState<ContactFormData>(INITIAL_FORM);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -205,6 +208,39 @@ export default function Contact() {
                 {t('contact.connect_body')}
               </p>
             </div>
+
+            {/* Phone & TJM if visible */}
+            {(profile?.phone_visible && profile?.phone) || (profile?.daily_rate_visible && profile?.daily_rate) ? (
+              <div className="space-y-2">
+                {profile?.phone_visible && profile?.phone && (
+                  <a
+                    href={`tel:${profile.phone}`}
+                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-bg-card hover:border-gold hover:shadow-[0_0_20px_rgba(201,169,110,0.08)] transition-all duration-300 group"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-bg-secondary border border-border flex items-center justify-center flex-shrink-0 group-hover:border-gold group-hover:text-gold text-text-secondary transition-all duration-300">
+                      <Phone size={16} />
+                    </div>
+                    <div>
+                      <p className="font-grotesk font-medium text-sm text-text-primary group-hover:text-gold transition-colors duration-300">
+                        {lang === 'fr' ? 'Téléphone' : 'Phone'}
+                      </p>
+                      <p className="font-grotesk text-xs text-text-secondary">{profile.phone}</p>
+                    </div>
+                  </a>
+                )}
+                {profile?.daily_rate_visible && profile?.daily_rate && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-border bg-bg-card">
+                    <div className="w-9 h-9 rounded-lg bg-bg-secondary border border-border flex items-center justify-center flex-shrink-0 text-text-secondary">
+                      <DollarSign size={16} />
+                    </div>
+                    <div>
+                      <p className="font-grotesk font-medium text-sm text-text-primary">TJM</p>
+                      <p className="font-grotesk text-xs text-text-secondary">{profile.daily_rate}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null}
 
             <div className="space-y-3">
               {(socialLinks ?? []).map((social) => {

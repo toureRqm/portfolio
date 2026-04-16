@@ -233,15 +233,31 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
             </div>
 
             {/* Status badge */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.2 }}
-              className="absolute -bottom-4 -right-4 bg-bg-card border border-border rounded-lg px-3 py-2 flex items-center gap-2 shadow-xl"
-            >
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="font-grotesk text-xs text-text-secondary">Open to remote</span>
-            </motion.div>
+            {!profileLoading && profile?.availability_visible && profile?.availability_status && (() => {
+              const statusMap = {
+                available: { color: '#4ade80', label: lang === 'fr' ? 'Disponible' : 'Available' },
+                on_mission: { color: '#facc15', label: lang === 'fr' ? 'En mission' : 'On mission' },
+                closed: { color: '#f87171', label: lang === 'fr' ? 'Fermé' : 'Closed' },
+              };
+              const s = statusMap[profile.availability_status as keyof typeof statusMap];
+              if (!s) return null;
+              return (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1.2 }}
+                  className="absolute -bottom-4 -right-4 bg-bg-card border border-border rounded-lg px-3 py-2 shadow-xl"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: s.color }} />
+                    <span className="font-grotesk text-xs text-text-secondary">{s.label}</span>
+                  </div>
+                  {profile.location_visible && profile.location && (
+                    <p className="font-grotesk text-xs mt-0.5" style={{ color: '#6b7280' }}>{profile.location}</p>
+                  )}
+                </motion.div>
+              );
+            })()}
           </div>
         </motion.div>
       </div>

@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, Trash2 } from 'lucide-react';
 import type { Experience, Technology } from '../../types';
 import TechPicker from './TechPicker';
 
@@ -51,6 +51,9 @@ export default function ExperienceForm({ experience, onSaved, onCancel }: Experi
   const [jobTitle, setJobTitle] = useState(experience?.job_title ?? '');
   const [jobTitleFr, setJobTitleFr] = useState(experience?.job_title_fr ?? '');
   const [company, setCompany] = useState(experience?.company ?? '');
+  const [contractType, setContractType] = useState(experience?.contract_type ?? 'freelance');
+  const [companyLogo, setCompanyLogo] = useState(experience?.company_logo ?? '');
+  const [logoUploading, setLogoUploading] = useState(false);
   const [dateStart, setDateStart] = useState(experience?.date_start?.slice(0, 10) ?? '');
   const [dateEnd, setDateEnd] = useState(experience?.date_end?.slice(0, 10) ?? '');
   const [location, setLocation] = useState(experience?.location ?? '');
@@ -60,13 +63,41 @@ export default function ExperienceForm({ experience, onSaved, onCancel }: Experi
   const [isVisible, setIsVisible] = useState(experience?.is_visible ?? true);
   const [technologies, setTechnologies] = useState<Technology[]>(experience?.technologies ?? []);
 
+  const uploadLogo = async (file: File) => {
+    if (!experience?.id) return;
+    setLogoUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('logo', file);
+      const { data } = await axios.post<{ url: string }>(`/api/admin/experiences/${experience.id}/logo`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setCompanyLogo(data.url);
+    } catch {
+      setError('Logo upload failed');
+    } finally {
+      setLogoUploading(false);
+    }
+  };
+
+  const deleteLogo = async () => {
+    if (!experience?.id) return;
+    try {
+      await axios.delete(`/api/admin/experiences/${experience.id}/logo`);
+      setCompanyLogo('');
+    } catch {
+      setError('Logo delete failed');
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError('');
     const payload = {
       job_title: jobTitle, job_title_fr: jobTitleFr || null,
-      company, date_start: dateStart, date_end: dateEnd || null,
+      company, contract_type: contractType,
+      date_start: dateStart, date_end: dateEnd || null,
       location, work_type: workType,
       description, description_fr: descriptionFr || null,
       is_visible: isVisible,
@@ -119,17 +150,64 @@ export default function ExperienceForm({ experience, onSaved, onCancel }: Experi
             <Field label="Company *">
               <input required value={company} onChange={(e) => setCompany(e.target.value)} style={INPUT_STYLE} placeholder="Acme Corp" {...focusStyle} />
             </Field>
-            <Field label="Location">
-              <input value={location} onChange={(e) => setLocation(e.target.value)} style={INPUT_STYLE} placeholder="Paris, France" {...focusStyle} />
+            <Field label="Contract Type">
+              <select value={contractType} onChange={(e) => setContractType(e.target.value)} style={INPUT_STYLE} {...focusStyle}>
+                <option value="freelance">Freelance</option>
+                <option value="CDI">CDI</option>
+                <option value="CDD">CDD</option>
+                <option value="stage">Stage</option>
+                <option value="alternance">Alternance</option>
+                <option value="mission">Mission</option>
+              </select>
             </Field>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          {/* Company Logo */}
+          <div>
+            <label style={LABEL_STYLE}>Logo Entreprise</label>
+            <div className="flex items-center gap-4">
+              <div
+                className="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0"
+                style={{ background: '#0a0a0f', border: '1px solid #2a2a35' }}
+              >
+                {companyLogo ? (
+                  <img src={companyLogo} alt="Logo" className="w-full h-full object-contain p-1" />
+                ) : (
+                  <span style={{ color: '#6b7280', fontSize: '0.75rem' }}>—</span>
+                )}
+              </div>
+              <label
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer"
+                style={{ background: '#2a2a35', color: isEdit ? '#9ca3af' : '#4b5563', border: '1px solid #3a3a45', cursor: isEdit ? 'pointer' : 'not-allowed' }}
+                onMouseEnter={(e) => { if (isEdit) e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={(e) => { if (isEdit) e.currentTarget.style.color = '#9ca3af'; }}
+              >
+                {logoUploading ? <Loader2 size={14} className="animate-spin" /> : null}
+                {isEdit ? 'Upload Logo' : 'Créer d\'abord l\'expérience'}
+                <input type="file" accept="image/*" className="hidden" disabled={!isEdit} onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadLogo(f); }} />
+              </label>
+              {companyLogo && isEdit && (
+                <button
+                  type="button"
+                  onClick={deleteLogo}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm"
+                  style={{ background: '#ef444420', color: '#f87171', border: '1px solid #ef444440' }}
+                >
+                  <Trash2 size={14} /> Supprimer
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4 gap-4">
             <Field label="Date Start *">
               <input required type="date" value={dateStart} onChange={(e) => setDateStart(e.target.value)} style={INPUT_STYLE} {...focusStyle} />
             </Field>
             <Field label="Date End (blank = Present)">
               <input type="date" value={dateEnd} onChange={(e) => setDateEnd(e.target.value)} style={INPUT_STYLE} {...focusStyle} />
+            </Field>
+            <Field label="Location">
+              <input value={location} onChange={(e) => setLocation(e.target.value)} style={INPUT_STYLE} placeholder="Paris, France" {...focusStyle} />
             </Field>
             <Field label="Work Type">
               <select
