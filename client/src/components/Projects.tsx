@@ -1,15 +1,10 @@
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { ExternalLink, Github, Calendar } from 'lucide-react';
 import { useApi } from '../hooks/useApi';
 import type { Project } from '../types';
-import ProjectModal from './ProjectModal';
 import { useTranslation } from '../hooks/useTranslation';
-
-interface ProjectsProps {
-  selectedProjectId: number | null;
-  onSelectProject: (id: number | null) => void;
-}
 
 function StatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
@@ -33,15 +28,7 @@ function formatDate(dateStr: string | null, presentLabel: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
-function ProjectCard({
-  project,
-  index,
-  onClick,
-}: {
-  project: Project;
-  index: number;
-  onClick: () => void;
-}) {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   const { t, pick } = useTranslation();
   const displayTitle = pick(project, 'title');
   const displayDescription = pick(project, 'description');
@@ -52,8 +39,7 @@ function ProjectCard({
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      onClick={onClick}
-      className="gold-border-card cursor-pointer group overflow-hidden flex flex-col"
+      className="gold-border-card group overflow-hidden flex flex-col relative cursor-pointer"
     >
       {/* Cover image */}
       <div className="relative overflow-hidden bg-bg-secondary aspect-video flex-shrink-0">
@@ -133,7 +119,6 @@ function ProjectCard({
                 href={project.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
                 className="text-text-secondary/60 hover:text-gold transition-colors"
                 aria-label={t('projects.view_code')}
               >
@@ -145,7 +130,6 @@ function ProjectCard({
                 href={project.demo_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
                 className="text-text-secondary/60 hover:text-gold transition-colors"
                 aria-label={t('projects.view_demo')}
               >
@@ -155,6 +139,12 @@ function ProjectCard({
           </div>
         </div>
       </div>
+      {/* Full card is a link */}
+      <Link
+        to={`/projects/${project.id}`}
+        className="absolute inset-0"
+        aria-label={`View ${displayTitle}`}
+      />
     </motion.article>
   );
 }
@@ -177,7 +167,7 @@ function SkeletonCard() {
   );
 }
 
-export default function Projects({ selectedProjectId, onSelectProject }: ProjectsProps) {
+export default function Projects() {
   const { data: projects, loading, error } = useApi<Project[]>('/api/projects');
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: '-100px' });
@@ -216,15 +206,10 @@ export default function Projects({ selectedProjectId, onSelectProject }: Project
           </div>
         )}
 
-        {!loading && !error && projects && (
+        {!loading && !error && projects && projects.length > 0 && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, i) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={i}
-                onClick={() => onSelectProject(project.id)}
-              />
+              <ProjectCard key={project.id} project={project} index={i} />
             ))}
           </div>
         )}
@@ -235,14 +220,6 @@ export default function Projects({ selectedProjectId, onSelectProject }: Project
           </div>
         )}
       </div>
-
-      {/* Project Modal */}
-      {selectedProjectId !== null && (
-        <ProjectModal
-          projectId={selectedProjectId}
-          onClose={() => onSelectProject(null)}
-        />
-      )}
     </section>
   );
 }

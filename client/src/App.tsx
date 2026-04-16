@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -9,6 +9,7 @@ import Experiences from './components/Experiences';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import MaintenancePage from './components/MaintenancePage';
+import ProjectPage from './components/ProjectPage';
 import { useApi } from './hooks/useApi';
 import type { Profile } from './types';
 import { AuthProvider } from './admin/context/AuthContext';
@@ -16,9 +17,8 @@ import AdminApp from './admin/AdminApp';
 import AdminLogin from './admin/AdminLogin';
 import ProtectedRoute from './admin/ProtectedRoute';
 
-function PortfolioPublic() {
+function PortfolioHome() {
   const { data: profile, loading } = useApi<Profile>('/api/profile');
-  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
 
   // Apply custom favicon from DB
   useEffect(() => {
@@ -44,13 +44,21 @@ function PortfolioPublic() {
         <Hero profile={profile} profileLoading={loading} />
         <About profile={profile} profileLoading={loading} />
         <Skills />
-        <Projects
-          selectedProjectId={selectedProjectId}
-          onSelectProject={setSelectedProjectId}
-        />
+        <Projects />
         <Experiences />
         <Contact />
       </main>
+      <Footer />
+    </div>
+  );
+}
+
+function PortfolioProject() {
+  const { data: profile } = useApi<Profile>('/api/profile');
+  return (
+    <div className="min-h-screen bg-bg-primary text-text-primary">
+      <Navbar profile={profile} />
+      <ProjectPage />
       <Footer />
     </div>
   );
@@ -70,7 +78,8 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/*" element={<PortfolioPublic />} />
+          <Route path="/projects/:id" element={<PortfolioProject />} />
+          <Route path="/*" element={<PortfolioHome />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

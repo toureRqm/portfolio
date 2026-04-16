@@ -10,7 +10,8 @@
       "Bash(grep -n \"level_percent\\\\|skills\\\\|ALTER\" c:/Users/abdou/Desktop/portfolio/database/*.js)",
       "Bash(grep -r \"cv_url\\\\|/cv\\\\|download.*cv\\\\|CV\" c:/Users/abdou/Desktop/portfolio/server/routes/admin.ts --include=*.ts)",
       "Bash(node database/migrate-cv-bilingual.js)",
-      "Bash(echo \"EXIT_CODE: $?\")"
+      "Bash(echo \"EXIT_CODE: $?\")",
+      "Bash(node_modules/.bin/tsc --noEmit --project client/tsconfig.json)"
     ]
   }
 }
