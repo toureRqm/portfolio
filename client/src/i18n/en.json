@@ -34,7 +34,7 @@
       "mobile": "Mobile",
       "tools": "Tools"
     },
-    "levels": { "1": "Beginner", "2": "Intermediate", "3": "Advanced" }
+    "levels": { "1": "Intermediate", "2": "Proficient", "3": "Advanced" }
   },
   "projects": {
     "section_label": "Projects",
@@ -47,7 +47,9 @@
     "role": "Role",
     "context": "Context",
     "period": "Period",
-    "empty": "projects view in progress, something dynamic is coming."
+    "empty": "projects view in progress, something dynamic is coming.",
+    "see_more": "See all projects",
+    "see_less": "Show less"
   },
   "experience": {
     "section_label": "Experience",

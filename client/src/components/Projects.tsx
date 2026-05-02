@@ -1,5 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { ExternalLink, Github, Calendar } from 'lucide-react';
 import { useApi } from '../hooks/useApi';
@@ -167,11 +168,17 @@ function SkeletonCard() {
   );
 }
 
+const INITIAL_VISIBLE = 4;
+
 export default function Projects() {
   const { data: projects, loading, error } = useApi<Project[]>('/api/projects');
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: '-100px' });
   const { t } = useTranslation();
+  const [showAll, setShowAll] = useState(false);
+
+  const visible = showAll ? (projects ?? []) : (projects ?? []).slice(0, INITIAL_VISIBLE);
+  const hasMore = (projects?.length ?? 0) > INITIAL_VISIBLE;
 
   return (
     <section id="projects" ref={sectionRef} className="py-24 md:py-32 bg-bg-secondary relative overflow-hidden">
@@ -201,17 +208,52 @@ export default function Projects() {
         )}
 
         {loading && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
         )}
 
         {!loading && !error && projects && projects.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {visible.map((project, i) => (
+                <ProjectCard key={project.id} project={project} index={i} />
+              ))}
+            </div>
+
+            {hasMore && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.4 }}
+                className="flex justify-center mt-10"
+              >
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-grotesk font-medium text-sm transition-all duration-300"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid #c9a96e50',
+                    color: '#c9a96e',
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = '#c9a96e15';
+                    (e.currentTarget as HTMLElement).style.borderColor = '#c9a96e';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = 'transparent';
+                    (e.currentTarget as HTMLElement).style.borderColor = '#c9a96e50';
+                  }}
+                >
+                  {showAll ? (
+                    <><ChevronUp size={16} /> {t('projects.see_less')}</>
+                  ) : (
+                    <><ChevronDown size={16} /> {t('projects.see_more')}</>
+                  )}
+                </button>
+              </motion.div>
+            )}
+          </>
         )}
 
         {!loading && !error && projects?.length === 0 && (

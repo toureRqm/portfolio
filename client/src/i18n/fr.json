@@ -34,7 +34,7 @@
       "mobile": "Mobile",
       "tools": "Outils"
     },
-    "levels": { "1": "Débutant", "2": "Intermédiaire", "3": "Avancé" }
+    "levels": { "1": "Intermédiaire", "2": "Confirmé", "3": "Avancé" }
   },
   "projects": {
     "section_label": "Projets",
@@ -47,7 +47,9 @@
     "role": "Rôle",
     "context": "Contexte",
     "period": "Période",
-    "empty": "Affichage projets en cours de réflexion, quelque chose de dynamique arrive."
+    "empty": "Affichage projets en cours de réflexion, quelque chose de dynamique arrive.",
+    "see_more": "Voir tous les projets",
+    "see_less": "Réduire"
   },
   "experience": {
     "section_label": "Expériences",
