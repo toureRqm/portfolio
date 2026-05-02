@@ -43,8 +43,8 @@ function PortfolioHome() {
       <main>
         <Hero profile={profile} profileLoading={loading} />
         <About profile={profile} profileLoading={loading} />
-        <Skills />
         <Projects />
+        <Skills />
         <Experiences />
         <Contact />
       </main>
