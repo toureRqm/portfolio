@@ -34,7 +34,9 @@
       "mobile": "Mobile",
       "tools": "Outils"
     },
-    "levels": { "1": "Intermédiaire", "2": "Confirmé", "3": "Avancé" }
+    "levels": { "1": "Intermédiaire", "2": "Confirmé", "3": "Avancé" },
+    "see_more": "Voir plus",
+    "see_less": "Voir moins"
   },
   "projects": {
     "section_label": "Projets",
