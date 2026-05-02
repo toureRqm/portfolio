@@ -78,12 +78,12 @@ export default function Contact() {
         />
       </div>
 
-      <div className="w-full px-[10%] relative">
+      <div className="w-full px-5 md:px-[10%] relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-12 md:mb-16 text-center"
         >
           <p className="section-label justify-center mb-4">{t('contact.section_label')}</p>
           <h2 className="section-title mb-4">
@@ -94,7 +94,7 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-20 items-start">
           {/* Form */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -198,7 +198,7 @@ export default function Contact() {
             initial={{ opacity: 0, x: 30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-8"
+            className="space-y-8 pt-2 md:pt-0 border-t border-border md:border-t-0"
           >
             <div>
               <h3 className="font-syne font-bold text-text-primary mb-3" style={{ fontSize: 'clamp(1.1rem, 1.6vw, 1.8rem)' }}>
