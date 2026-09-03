@@ -6,16 +6,16 @@ import type { SkillsGrouped, Skill } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
 const LEVEL_CONFIG: Record<number, { bg: string; border: string; text: string }> = {
-  3: { bg: '#c9a96e18', border: '#c9a96e50', text: '#c9a96e' },
-  2: { bg: '#60a5fa18', border: '#60a5fa50', text: '#60a5fa' },
-  1: { bg: '#ffffff0a', border: '#ffffff20', text: '#9ca3af' },
+  3: { bg: '#a8552e18', border: '#a8552e50', text: '#a8552e' },
+  2: { bg: '#2c5fa818', border: '#2c5fa850', text: '#2c5fa8' },
+  1: { bg: '#241d1a0a', border: '#241d1a1a', text: '#8a7c72' },
 };
 
 const CATEGORY_CONFIG = [
-  { key: 'frontend', label: 'Frontend',            accent: '#c9a96e' },
-  { key: 'backend',  label: 'Backend',             accent: '#60a5fa' },
-  { key: 'mobile',   label: 'Mobile',              accent: '#a78bfa' },
-  { key: 'ai',       label: 'IA & Automatisation', accent: '#34d399' },
+  { key: 'frontend', label: 'Frontend',            accent: '#a8552e' },
+  { key: 'backend',  label: 'Backend',             accent: '#2c5fa8' },
+  { key: 'mobile',   label: 'Mobile',              accent: '#6d4aa8' },
+  { key: 'ai',       label: 'IA & Automatisation', accent: '#0b6b50' },
 ];
 
 const INITIAL_VISIBLE = 4;
@@ -45,7 +45,7 @@ function SkillRow({ skill, accent, index, inView }: { skill: Skill; accent: stri
             {skill.name.charAt(0).toUpperCase()}
           </span>
         )}
-        <span className="font-grotesk truncate" style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.75)' }}>
+        <span className="font-grotesk truncate" style={{ fontSize: '0.82rem', color: 'rgba(36,29,26,0.82)' }}>
           {skill.name}
         </span>
       </div>
@@ -77,7 +77,7 @@ function CategoryColumn({ label, accent, skills, catIndex, inView }: {
       transition={{ duration: 0.55, delay: catIndex * 0.1 }}
       className="flex flex-col"
       style={{
-        background: 'linear-gradient(135deg, #111120 0%, #0d0d18 100%)',
+        background: 'linear-gradient(135deg, #fdfaf6 0%, #f4ece2 100%)',
         border: `1px solid ${accent}20`,
         borderRadius: 16,
         padding: '1.25rem',
@@ -96,7 +96,7 @@ function CategoryColumn({ label, accent, skills, catIndex, inView }: {
           </span>
         </div>
         <div>
-          <h3 className="font-syne font-bold text-white leading-none" style={{ fontSize: '1rem' }}>
+          <h3 className="font-syne font-bold text-text-primary leading-none" style={{ fontSize: '1rem' }}>
             {label}
           </h3>
           <div style={{ height: 2, marginTop: 4, borderRadius: 1, width: 20, background: accent }} />
@@ -136,7 +136,7 @@ function CategoryColumn({ label, accent, skills, catIndex, inView }: {
 
 function SkeletonColumn() {
   return (
-    <div style={{ background: '#111120', border: '1px solid #1e1e2e', borderRadius: 16, padding: '1.25rem' }}>
+    <div style={{ background: '#fdfaf6', border: '1px solid #e3d8cb', borderRadius: 16, padding: '1.25rem' }}>
       <div className="flex items-center gap-2.5 mb-5">
         <div className="w-8 h-8 rounded-lg bg-border animate-pulse" />
         <div className="h-4 w-20 bg-border rounded animate-pulse" />
@@ -163,20 +163,20 @@ export default function Skills() {
   const { t } = useTranslation();
 
   return (
-    <section id="skills" ref={sectionRef} className="py-24 md:py-32 relative overflow-hidden" style={{ background: '#07070e' }}>
+    <section id="skills" ref={sectionRef} className="py-24 md:py-32 relative overflow-hidden" style={{ background: '#f1e8dc' }}>
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 opacity-[0.025]" style={{
-          backgroundImage: 'linear-gradient(rgba(201,169,110,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(201,169,110,0.6) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(168,85,46,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,46,0.6) 1px, transparent 1px)',
           backgroundSize: '60px 60px',
           maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)',
           WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)',
         }} />
-        <div className="absolute -top-32 -left-20 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, #c9a96e 0%, transparent 70%)' }} />
-        <div className="absolute top-1/3 right-0 w-[300px] h-[300px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #60a5fa 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 left-1/3 w-[280px] h-[280px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #a78bfa 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
-        <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a96e30, transparent)' }} />
+        <div className="absolute -top-32 -left-20 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, #a8552e 0%, transparent 70%)' }} />
+        <div className="absolute top-1/3 right-0 w-[300px] h-[300px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #2c5fa8 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 left-1/3 w-[280px] h-[280px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #6d4aa8 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #0b6b50 0%, transparent 70%)' }} />
+        <div className="absolute top-0 left-[10%] right-[10%] h-px" style={{ background: 'linear-gradient(90deg, transparent, #a8552e30, transparent)' }} />
       </div>
 
       <div className="w-full px-5 md:px-[10%] relative">
@@ -191,7 +191,7 @@ export default function Skills() {
             {t('skills.title_prefix')}{' '}
             <span className="text-gold italic">{t('skills.title_italic')}</span>
           </h2>
-          <p className="font-grotesk" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.15rem)', color: 'rgba(255,255,255,0.32)' }}>
+          <p className="font-grotesk" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.15rem)', color: 'rgba(36,29,26,0.62)' }}>
             {t('skills.subtitle')}
           </p>
         </motion.div>
@@ -224,11 +224,11 @@ export default function Skills() {
             className="flex items-center gap-4 mt-12"
             style={{ opacity: 0.28 }}
           >
-            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, #c9a96e)' }} />
-            <span className="font-mono tracking-widest uppercase" style={{ fontSize: '0.65rem', color: '#c9a96e' }}>
+            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, #a8552e)' }} />
+            <span className="font-mono tracking-widest uppercase" style={{ fontSize: '0.65rem', color: '#a8552e' }}>
               {t('skills.always_learning')}
             </span>
-            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, #c9a96e)' }} />
+            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, #a8552e)' }} />
           </motion.div>
         )}
       </div>

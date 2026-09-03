@@ -72,7 +72,7 @@ export default function Contact() {
         <div
           className="absolute top-0 left-0 w-full h-full opacity-20"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(201,169,110,0.15) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(168,85,46,0.15) 1px, transparent 1px)',
             backgroundSize: '28px 28px',
           }}
         />
@@ -114,7 +114,7 @@ export default function Contact() {
                   value={form.sender_name}
                   onChange={handleChange}
                   placeholder={t('contact.name_placeholder')}
-                  className="w-full bg-bg-card border border-border rounded-lg px-4 py-3 font-grotesk text-sm text-text-primary placeholder:text-text-secondary/40 focus:outline-none focus:border-gold transition-colors duration-300"
+                  className="w-full bg-bg-card border border-border rounded-lg px-4 py-3 font-grotesk text-sm text-text-primary placeholder:text-text-secondary/70 focus:outline-none focus:border-gold transition-colors duration-300"
                 />
               </div>
 
@@ -130,7 +130,7 @@ export default function Contact() {
                   value={form.sender_email}
                   onChange={handleChange}
                   placeholder={t('contact.email_placeholder')}
-                  className="w-full bg-bg-card border border-border rounded-lg px-4 py-3 font-grotesk text-sm text-text-primary placeholder:text-text-secondary/40 focus:outline-none focus:border-gold transition-colors duration-300"
+                  className="w-full bg-bg-card border border-border rounded-lg px-4 py-3 font-grotesk text-sm text-text-primary placeholder:text-text-secondary/70 focus:outline-none focus:border-gold transition-colors duration-300"
                 />
               </div>
 
@@ -146,7 +146,7 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   placeholder={t('contact.message_placeholder')}
-                  className="w-full bg-bg-card border border-border rounded-lg px-4 py-3 font-grotesk text-sm text-text-primary placeholder:text-text-secondary/40 focus:outline-none focus:border-gold transition-colors duration-300 resize-none"
+                  className="w-full bg-bg-card border border-border rounded-lg px-4 py-3 font-grotesk text-sm text-text-primary placeholder:text-text-secondary/70 focus:outline-none focus:border-gold transition-colors duration-300 resize-none"
                 />
               </div>
 
@@ -155,7 +155,7 @@ export default function Contact() {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-grotesk"
+                  className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-700 text-sm font-grotesk"
                 >
                   <CheckCircle size={16} />
                   {t('contact.success')}
@@ -215,7 +215,7 @@ export default function Contact() {
                 {profile?.phone_visible && profile?.phone && (
                   <a
                     href={`tel:${profile.phone}`}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-bg-card hover:border-gold hover:shadow-[0_0_20px_rgba(201,169,110,0.08)] transition-all duration-300 group"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-bg-card hover:border-gold hover:shadow-[0_0_20px_rgba(168,85,46,0.08)] transition-all duration-300 group"
                   >
                     <div className="w-9 h-9 rounded-lg bg-bg-secondary border border-border flex items-center justify-center flex-shrink-0 group-hover:border-gold group-hover:text-gold text-text-secondary transition-all duration-300">
                       <Phone size={16} />
@@ -255,7 +255,7 @@ export default function Contact() {
                     href={social.url}
                     target={isEmail ? undefined : '_blank'}
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-bg-card hover:border-gold hover:shadow-[0_0_20px_rgba(201,169,110,0.08)] transition-all duration-300 group"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-bg-card hover:border-gold hover:shadow-[0_0_20px_rgba(168,85,46,0.08)] transition-all duration-300 group"
                   >
                     <div className="w-9 h-9 rounded-lg bg-bg-secondary border border-border flex items-center justify-center flex-shrink-0 group-hover:border-gold group-hover:text-gold text-text-secondary transition-all duration-300">
                       <Icon size={16} />

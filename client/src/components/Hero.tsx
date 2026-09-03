@@ -66,7 +66,7 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
         <div
           className="absolute top-20 right-10 w-32 h-32 animate-float opacity-60"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(201,169,110,0.35) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(168,85,46,0.35) 1px, transparent 1px)',
             backgroundSize: '14px 14px',
           }}
         />
@@ -74,7 +74,7 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
         <div
           className="absolute bottom-32 left-10 w-24 h-24 animate-float-slow opacity-40"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(201,169,110,0.25) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(168,85,46,0.25) 1px, transparent 1px)',
             backgroundSize: '12px 12px',
           }}
         />
@@ -209,8 +209,8 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
               style={{
                 width: 'clamp(200px, 30vw, 320px)',
                 aspectRatio: '3/4',
-                border: '1.5px solid #c9a96e',
-                boxShadow: '0 0 0 6px #0a0a0f, 0 0 0 7px rgba(201,169,110,0.18), 0 0 60px rgba(201,169,110,0.06)',
+                border: '1.5px solid #a8552e',
+                boxShadow: '0 0 0 6px #f6efe7, 0 0 0 7px rgba(168,85,46,0.18), 0 0 60px rgba(168,85,46,0.06)',
               }}
             >
               {/* Corner accents */}
@@ -226,7 +226,7 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
                   src={profile?.photo_url ?? '/static/media/moi.1534d679.png'}
                   alt={profile?.name ?? 'Abdourahmane Touré'}
                   className="w-full h-full object-cover object-top"
-                  style={{ filter: 'brightness(0.85) grayscale(10%)' }}
+                  style={{ filter: 'grayscale(8%) contrast(1.02)' }}
                   loading="eager"
                 />
               )}
@@ -235,11 +235,11 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
             {/* Status badge */}
             {!profileLoading && profile?.availability_visible && profile?.availability_status && (() => {
               const statusMap = {
-                available: { color: '#4ade80', label: lang === 'fr' ? 'Disponible' : 'Available' },
-                available_remote: { color: '#4ade80', label: lang === 'fr' ? 'Disponible en remote' : 'Available remotely' },
-                available_onsite: { color: '#4ade80', label: lang === 'fr' ? 'Disponible sur site' : 'Available on-site' },
-                on_mission: { color: '#facc15', label: lang === 'fr' ? 'En mission' : 'On mission' },
-                closed: { color: '#f87171', label: lang === 'fr' ? 'Fermé' : 'Closed' },
+                available: { color: '#15803d', label: lang === 'fr' ? 'Disponible' : 'Available' },
+                available_remote: { color: '#15803d', label: lang === 'fr' ? 'Disponible en remote' : 'Available remotely' },
+                available_onsite: { color: '#15803d', label: lang === 'fr' ? 'Disponible sur site' : 'Available on-site' },
+                on_mission: { color: '#9a6f08', label: lang === 'fr' ? 'En mission' : 'On mission' },
+                closed: { color: '#c14338', label: lang === 'fr' ? 'Fermé' : 'Closed' },
               };
               const s = statusMap[profile.availability_status as keyof typeof statusMap];
               if (!s) return null;
@@ -255,7 +255,7 @@ export default function Hero({ profile, profileLoading }: HeroProps) {
                     <span className="font-grotesk text-xs text-text-secondary">{s.label}</span>
                   </div>
                   {profile.location_visible && profile.location && (
-                    <p className="font-grotesk text-xs mt-0.5" style={{ color: '#6b7280' }}>{profile.location}</p>
+                    <p className="font-grotesk text-xs mt-0.5" style={{ color: '#8a7c72' }}>{profile.location}</p>
                   )}
                 </motion.div>
               );

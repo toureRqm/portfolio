@@ -18,7 +18,7 @@ export default function Footer() {
           <span>{t('footer.built_with')}</span>
         </div>
 
-        <p className="font-grotesk text-text-secondary/60 text-sm">
+        <p className="font-grotesk text-text-secondary/85 text-sm">
           © {year} Abdourahmane Touré. All rights reserved.
         </p>
       </div>

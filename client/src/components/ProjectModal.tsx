@@ -4,6 +4,7 @@ import { X, ExternalLink, Github, Calendar, MapPin, User, Loader2, ChevronLeft, 
 import { useApi } from '../hooks/useApi';
 import type { Project } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { techBadgeStyle } from '../utils/color';
 
 interface ProjectModalProps {
   projectId: number;
@@ -168,7 +169,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                         </button>
                         <div
                           className="absolute bottom-3 right-3 z-10 text-xs font-mono px-2 py-0.5 rounded-full"
-                          style={{ background: 'rgba(0,0,0,0.55)', color: '#c9a96e' }}
+                          style={{ background: 'rgba(0,0,0,0.55)', color: '#a8552e' }}
                         >
                           {imgIdx + 1} / {allImages.length}
                         </div>
@@ -187,7 +188,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                   </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <div className="text-7xl font-syne font-bold text-gold/10 select-none">{displayTitle.charAt(0)}</div>
+                    <div className="text-7xl font-syne font-bold text-gold/20 select-none">{displayTitle.charAt(0)}</div>
                   </div>
                 )}
               </div>
@@ -198,10 +199,10 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                   <div className="flex items-center gap-2 mb-1">
                     <span
                       className={`inline-flex items-center gap-1.5 text-xs font-grotesk font-medium px-2 py-0.5 rounded-full ${
-                        project.status === 'in_progress' ? 'bg-amber-500/15 text-amber-400' : 'bg-green-500/15 text-green-400'
+                        project.status === 'in_progress' ? 'bg-amber-500/15 text-amber-700' : 'bg-green-500/15 text-green-700'
                       }`}
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full ${project.status === 'in_progress' ? 'bg-amber-400 animate-pulse' : 'bg-green-400'}`} />
+                      <span className={`w-1.5 h-1.5 rounded-full ${project.status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-green-500'}`} />
                       {project.status === 'in_progress' ? t('projects.status_in_progress') : t('projects.status_completed')}
                     </span>
                   </div>
@@ -236,7 +237,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech) => (
                         <span key={tech.id} className="tech-badge"
-                          style={{ backgroundColor: tech.color + '25', color: tech.color, border: `1px solid ${tech.color}40` }}>
+                          style={techBadgeStyle(tech.color)}>
                           {tech.name}
                         </span>
                       ))}

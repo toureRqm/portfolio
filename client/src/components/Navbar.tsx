@@ -77,7 +77,7 @@ export default function Navbar({ profile }: NavbarProps) {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-bg-primary/90 backdrop-blur-md border-b border-border shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
+          ? 'bg-bg-primary/90 backdrop-blur-md border-b border-border shadow-[0_4px_30px_rgba(74,55,42,0.10)]'
           : 'bg-transparent'
       }`}
     >
@@ -128,7 +128,7 @@ export default function Navbar({ profile }: NavbarProps) {
           {/* Language toggle */}
           <button
             onClick={() => setLang(lang === 'en' ? 'fr' : 'en')}
-            className="text-xs font-mono border border-gold/30 hover:border-gold px-2 py-1 text-gold/60 hover:text-gold transition-all"
+            className="text-xs font-mono border border-gold/30 hover:border-gold px-2 py-1 text-gold/85 hover:text-gold transition-all"
           >
             {lang === 'en' ? 'FR' : 'EN'}
           </button>
@@ -138,7 +138,7 @@ export default function Navbar({ profile }: NavbarProps) {
         <div className="md:hidden flex items-center gap-2">
           <button
             onClick={() => setLang(lang === 'en' ? 'fr' : 'en')}
-            className="text-xs font-mono border border-gold/30 hover:border-gold px-2 py-1 text-gold/70 hover:text-gold transition-all"
+            className="text-xs font-mono border border-gold/30 hover:border-gold px-2 py-1 text-gold/85 hover:text-gold transition-all"
           >
             {lang === 'en' ? 'FR' : 'EN'}
           </button>

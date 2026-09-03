@@ -34,7 +34,7 @@ function BlinkingCursor() {
       animate={{ opacity: [1, 0] }}
       transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
       className="inline-block w-0.5 h-4 ml-0.5 align-middle"
-      style={{ background: '#c9a96e' }}
+      style={{ background: '#a8552e' }}
     />
   );
 }
@@ -59,13 +59,13 @@ export default function About({ profile, profileLoading }: AboutProps) {
         <div
           className="absolute bottom-0 right-0 w-64 h-64 opacity-30"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(201,169,110,0.2) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(168,85,46,0.2) 1px, transparent 1px)',
             backgroundSize: '18px 18px',
           }}
         />
         <div className="absolute top-0 left-0 w-px h-full bg-gradient-to-b from-transparent via-border to-transparent" />
         <div className="absolute -top-20 right-1/3 w-64 h-64 rounded-full opacity-[0.04]"
-          style={{ background: 'radial-gradient(circle, #c9a96e 0%, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, #a8552e 0%, transparent 70%)' }} />
       </div>
 
       <div className="w-full px-[10%] relative">
@@ -102,29 +102,29 @@ export default function About({ profile, profileLoading }: AboutProps) {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.6 }}
               className="rounded-xl overflow-hidden flex flex-col flex-1"
-              style={{ background: '#0a0a0f', border: '1px solid #2a2a35' }}
+              style={{ background: '#f6efe7', border: '1px solid #e3d8cb' }}
             >
               {/* Window chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid #2a2a35' }}>
+              <div className="flex items-center gap-2 px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid #e3d8cb' }}>
                 <div className="w-3 h-3 rounded-full" style={{ background: '#ef4444' }} />
                 <div className="w-3 h-3 rounded-full" style={{ background: '#f59e0b' }} />
                 <div className="w-3 h-3 rounded-full" style={{ background: '#22c55e' }} />
-                <span className="ml-2 text-xs font-mono" style={{ color: '#4b5563' }}>stack.ts</span>
+                <span className="ml-2 text-xs font-mono" style={{ color: '#6b5e56' }}>stack.ts</span>
               </div>
 
               {/* Code — flex-1 grows to fill card */}
               <div className="p-5 font-mono text-sm leading-relaxed flex-1 flex flex-col justify-center">
-                <div style={{ color: '#6b7280' }}>{'// my tech stack'}</div>
+                <div style={{ color: '#8a7c72' }}>{'// my tech stack'}</div>
                 <div className="mt-1">
-                  <span style={{ color: '#60a5fa' }}>const </span>
-                  <span style={{ color: '#c9a96e' }}>stack </span>
-                  <span style={{ color: '#e5e7eb' }}>= {'{'}</span>
+                  <span style={{ color: '#2c5fa8' }}>const </span>
+                  <span style={{ color: '#a8552e' }}>stack </span>
+                  <span style={{ color: '#241d1a' }}>= {'{'}</span>
                 </div>
                 {[
-                  { key: 'frontend', val: "'React, TypeScript, Tailwind'",  color: '#86efac' },
-                  { key: 'backend',  val: "'Node.js, Express, PostgreSQL'", color: '#86efac' },
-                  { key: 'mobile',   val: "'Flutter, Dart'",                color: '#86efac' },
-                  { key: 'tools',    val: "'Git, Docker, Figma'",           color: '#86efac' },
+                  { key: 'frontend', val: "'React, TypeScript, Tailwind'",  color: '#357045' },
+                  { key: 'backend',  val: "'Node.js, Express, PostgreSQL'", color: '#357045' },
+                  { key: 'mobile',   val: "'Flutter, Dart'",                color: '#357045' },
+                  { key: 'tools',    val: "'Git, Docker, Figma'",           color: '#357045' },
                 ].map((line, i) => (
                   <motion.div
                     key={line.key}
@@ -133,14 +133,14 @@ export default function About({ profile, profileLoading }: AboutProps) {
                     transition={{ delay: 0.7 + i * 0.1 }}
                     className="pl-5"
                   >
-                    <span style={{ color: '#a78bfa' }}>{line.key}</span>
-                    <span style={{ color: '#e5e7eb' }}>: </span>
+                    <span style={{ color: '#6d4aa8' }}>{line.key}</span>
+                    <span style={{ color: '#241d1a' }}>: </span>
                     <span style={{ color: line.color }}>{line.val}</span>
-                    <span style={{ color: '#6b7280' }}>,</span>
+                    <span style={{ color: '#8a7c72' }}>,</span>
                   </motion.div>
                 ))}
                 <div>
-                  <span style={{ color: '#e5e7eb' }}>{'}'}</span>
+                  <span style={{ color: '#241d1a' }}>{'}'}</span>
                   <BlinkingCursor />
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default function About({ profile, profileLoading }: AboutProps) {
                 style={{
                   flex: 1,
                   scrollbarWidth: 'thin',
-                  scrollbarColor: '#2a2a35 transparent',
+                  scrollbarColor: '#e3d8cb transparent',
                 }}
               >
                 {paragraphs.map((para, i) => (

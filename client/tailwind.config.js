@@ -4,26 +4,29 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Palette claire facon Nexorius : creme, brun profond, terre cuite.
+        // Les noms de jetons sont inchanges pour que tout le front bascule
+        // sans toucher aux composants. "gold" porte desormais la terre cuite.
         bg: {
-          primary: '#0a0a0f',
-          secondary: '#111118',
-          card: '#16161d',
+          primary: '#f6efe7',
+          secondary: '#efe6db',
+          card: '#fbf6f0',
         },
         text: {
-          primary: '#f0f0f0',
-          secondary: '#a0a0a0',
+          primary: '#241d1a',
+          secondary: '#6b5e56',
         },
         gold: {
-          DEFAULT: '#c9a96e',
-          light: '#e2c99a',
-          dim: 'rgba(201,169,110,0.18)',
+          DEFAULT: '#a8552e',
+          light: '#c4703f',
+          dim: 'rgba(168,85,46,0.10)',
         },
         accent: {
-          blue: '#2b6cb0',
+          blue: '#1f5a99',
         },
         border: {
-          DEFAULT: '#2a2a35',
-          hover: '#c9a96e',
+          DEFAULT: '#e3d8cb',
+          hover: '#a8552e',
         },
       },
       fontFamily: {

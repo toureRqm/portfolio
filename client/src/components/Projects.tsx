@@ -6,6 +6,7 @@ import { ExternalLink, Github, Calendar } from 'lucide-react';
 import { useApi } from '../hooks/useApi';
 import type { Project } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { techBadgeStyle } from '../utils/color';
 
 function StatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
@@ -13,11 +14,11 @@ function StatusBadge({ status }: { status: string }) {
     <span
       className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-grotesk font-medium ${
         status === 'in_progress'
-          ? 'bg-amber-500/15 text-amber-400'
-          : 'bg-green-500/15 text-green-400'
+          ? 'bg-amber-500/15 text-amber-700'
+          : 'bg-green-500/15 text-green-700'
       }`}
     >
-      <span className={`w-1.5 h-1.5 rounded-full ${status === 'in_progress' ? 'bg-amber-400 animate-pulse' : 'bg-green-400'}`} />
+      <span className={`w-1.5 h-1.5 rounded-full ${status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-green-500'}`} />
       {status === 'in_progress' ? t('projects.status_in_progress') : t('projects.status_completed')}
     </span>
   );
@@ -55,12 +56,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <div className="w-full h-full flex items-center justify-center bg-bg-card">
             <div className="text-center">
               <div
-                className="text-5xl font-syne font-bold text-gold/20 mb-2"
+                className="text-5xl font-syne font-bold text-gold/30 mb-2"
                 aria-hidden
               >
                 {displayTitle.charAt(0)}
               </div>
-              <div className="text-xs text-text-secondary/40 font-grotesk">No preview</div>
+              <div className="text-xs text-text-secondary/70 font-grotesk">No preview</div>
             </div>
           </div>
         )}
@@ -78,7 +79,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
 
         {project.date_start && (
-          <div className="flex items-center gap-1.5 text-text-secondary/60 text-xs font-grotesk mb-3">
+          <div className="flex items-center gap-1.5 text-text-secondary/85 text-xs font-grotesk mb-3">
             <Calendar size={11} />
             {formatDate(project.date_start, t('projects.period'))} – {formatDate(project.date_end, t('experience.present'))}
           </div>
@@ -94,7 +95,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <span
               key={tech.id}
               className="tech-badge flex items-center gap-1"
-              style={{ backgroundColor: tech.color + '25', color: tech.color, border: `1px solid ${tech.color}40` }}
+              style={techBadgeStyle(tech.color)}
             >
               {tech.icon_url && (
                 <img src={tech.icon_url} alt="" className="w-3.5 h-3.5 object-contain flex-shrink-0" />
@@ -111,7 +112,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-border">
-          <span className="font-grotesk text-xs text-text-secondary/60">
+          <span className="font-grotesk text-xs text-text-secondary/85">
             {displayRole}
           </span>
           <div className="flex items-center gap-3">
@@ -120,7 +121,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 href={project.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-secondary/60 hover:text-gold transition-colors"
+                className="text-text-secondary/85 hover:text-gold transition-colors"
                 aria-label={t('projects.view_code')}
               >
                 <Github size={14} />
@@ -131,7 +132,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 href={project.demo_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-secondary/60 hover:text-gold transition-colors"
+                className="text-text-secondary/85 hover:text-gold transition-colors"
                 aria-label={t('projects.view_demo')}
               >
                 <ExternalLink size={14} />
@@ -233,16 +234,16 @@ export default function Projects() {
                   className="flex items-center gap-2 px-6 py-3 rounded-lg font-grotesk font-medium text-sm transition-all duration-300"
                   style={{
                     background: 'transparent',
-                    border: '1px solid #c9a96e50',
-                    color: '#c9a96e',
+                    border: '1px solid #a8552e50',
+                    color: '#a8552e',
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = '#c9a96e15';
-                    (e.currentTarget as HTMLElement).style.borderColor = '#c9a96e';
+                    (e.currentTarget as HTMLElement).style.background = '#a8552e15';
+                    (e.currentTarget as HTMLElement).style.borderColor = '#a8552e';
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.background = 'transparent';
-                    (e.currentTarget as HTMLElement).style.borderColor = '#c9a96e50';
+                    (e.currentTarget as HTMLElement).style.borderColor = '#a8552e50';
                   }}
                 >
                   {showAll ? (
@@ -257,7 +258,7 @@ export default function Projects() {
         )}
 
         {!loading && !error && projects?.length === 0 && (
-          <div className="text-center py-16 text-text-secondary/60 font-grotesk text-sm">
+          <div className="text-center py-16 text-text-secondary/85 font-grotesk text-sm">
             <p>{t('projects.empty')}</p>
           </div>
         )}

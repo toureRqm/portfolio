@@ -8,6 +8,7 @@ import {
 import { useApi } from '../hooks/useApi';
 import type { Project } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { techBadgeStyle } from '../utils/color';
 
 function formatDate(dateStr: string | null, presentLabel: string): string {
   if (!dateStr) return presentLabel;
@@ -217,7 +218,7 @@ export default function ProjectPage() {
             <div className="absolute inset-0 bg-bg-secondary" />
           )}
           {/* Overlay */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,10,15,0.75) 0%, rgba(10,10,15,0.88) 60%, rgba(10,10,15,1) 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(246,239,231,0.82) 0%, rgba(246,239,231,0.94) 60%, rgba(246,239,231,1) 100%)' }} />
 
           {/* Content */}
           <div className="relative z-10 w-full px-[10%] pt-28 pb-14">
@@ -226,11 +227,11 @@ export default function ProjectPage() {
               <span
                 className={`inline-flex items-center gap-1.5 text-xs font-grotesk font-medium px-2.5 py-0.5 rounded-full ${
                   project.status === 'in_progress'
-                    ? 'bg-amber-500/15 text-amber-400'
-                    : 'bg-green-500/15 text-green-400'
+                    ? 'bg-amber-500/15 text-amber-700'
+                    : 'bg-green-500/15 text-green-700'
                 }`}
               >
-                <span className={`w-1.5 h-1.5 rounded-full ${project.status === 'in_progress' ? 'bg-amber-400 animate-pulse' : 'bg-green-400'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${project.status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-green-500'}`} />
                 {project.status === 'in_progress' ? t('projects.status_in_progress') : t('projects.status_completed')}
               </span>
             </div>
@@ -244,12 +245,12 @@ export default function ProjectPage() {
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-secondary/80 font-grotesk">
               {project.date_start && (
                 <div className="flex items-center gap-1.5">
-                  <Calendar size={13} className="text-gold/70" />
+                  <Calendar size={13} className="text-gold/85" />
                   {formatDate(project.date_start, t('projects.period'))} – {formatDate(project.date_end, t('experience.present'))}
                 </div>
               )}
-              {displayRole    && <div className="flex items-center gap-1.5"><User   size={13} className="text-gold/70" />{displayRole}</div>}
-              {displayContext && <div className="flex items-center gap-1.5"><MapPin size={13} className="text-gold/70" />{displayContext}</div>}
+              {displayRole    && <div className="flex items-center gap-1.5"><User   size={13} className="text-gold/85" />{displayRole}</div>}
+              {displayContext && <div className="flex items-center gap-1.5"><MapPin size={13} className="text-gold/85" />{displayContext}</div>}
             </div>
           </div>
         </div>
@@ -279,7 +280,7 @@ export default function ProjectPage() {
                     <span
                       key={tech.id}
                       className="tech-badge flex items-center gap-1.5"
-                      style={{ backgroundColor: tech.color + '25', color: tech.color, border: `1px solid ${tech.color}40` }}
+                      style={techBadgeStyle(tech.color)}
                     >
                       {tech.icon_url && <img src={tech.icon_url} alt="" className="w-3.5 h-3.5 object-contain flex-shrink-0" />}
                       {tech.name}
@@ -338,7 +339,7 @@ export default function ProjectPage() {
                     onClick={(e) => { e.stopPropagation(); setActiveIdx((i) => (i + 1) % allImages.length); }}>
                     <ChevronRight size={16} />
                   </button>
-                  <div className="absolute bottom-3 left-3 text-xs font-mono px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.55)', color: '#c9a96e' }}>
+                  <div className="absolute bottom-3 left-3 text-xs font-mono px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,0,0,0.55)', color: '#a8552e' }}>
                     {activeIdx + 1} / {allImages.length}
                   </div>
                 </>

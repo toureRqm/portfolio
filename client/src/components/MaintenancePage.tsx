@@ -56,7 +56,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           display: flex;
           width: 100vw;
           height: 100vh;
-          background: #0b0b0f;
+          background: #f6efe7;
           overflow: hidden;
           user-select: none;
           -webkit-user-select: none;
@@ -80,7 +80,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           height: 100%;
           width: 1px;
           transform: translateX(-50%);
-          background: linear-gradient(to bottom, transparent 0%, #c9a96e 10%, #c9a96e 90%, transparent 100%);
+          background: linear-gradient(to bottom, transparent 0%, #a8552e 10%, #a8552e 90%, transparent 100%);
           z-index: 2;
           animation: drawLine 1.2s ease 0.2s both;
         }
@@ -90,10 +90,10 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           z-index: 3;
           height: 52vh;
           aspect-ratio: 3 / 4;
-          border: 1.5px solid #c9a96e;
+          border: 1.5px solid #a8552e;
           overflow: hidden;
-          background: #0b0b0f;
-          box-shadow: 0 0 0 6px #0b0b0f, 0 0 0 7px rgba(201,169,110,0.18), 0 0 60px rgba(201,169,110,0.06);
+          background: #f6efe7;
+          box-shadow: 0 0 0 6px #f6efe7, 0 0 0 7px rgba(168,85,46,0.18), 0 0 60px rgba(168,85,46,0.06);
           animation: scaleIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 1s both;
         }
 
@@ -103,7 +103,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           object-fit: cover;
           object-position: center 5%;
           display: block;
-          filter: brightness(0.82) grayscale(12%);
+          filter: grayscale(8%) contrast(1.02);
           pointer-events: none;
           -webkit-user-drag: none;
         }
@@ -114,16 +114,16 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           height: 14px;
           z-index: 4;
         }
-        .maint-corner-tl { top: -1px; left: -1px; border-top: 1.5px solid #c9a96e; border-left: 1.5px solid #c9a96e; }
-        .maint-corner-tr { top: -1px; right: -1px; border-top: 1.5px solid #c9a96e; border-right: 1.5px solid #c9a96e; }
-        .maint-corner-bl { bottom: -1px; left: -1px; border-bottom: 1.5px solid #c9a96e; border-left: 1.5px solid #c9a96e; }
-        .maint-corner-br { bottom: -1px; right: -1px; border-bottom: 1.5px solid #c9a96e; border-right: 1.5px solid #c9a96e; }
+        .maint-corner-tl { top: -1px; left: -1px; border-top: 1.5px solid #a8552e; border-left: 1.5px solid #a8552e; }
+        .maint-corner-tr { top: -1px; right: -1px; border-top: 1.5px solid #a8552e; border-right: 1.5px solid #a8552e; }
+        .maint-corner-bl { bottom: -1px; left: -1px; border-bottom: 1.5px solid #a8552e; border-left: 1.5px solid #a8552e; }
+        .maint-corner-br { bottom: -1px; right: -1px; border-bottom: 1.5px solid #a8552e; border-right: 1.5px solid #a8552e; }
 
         .maint-circle-lg {
           position: absolute;
           width: 52vh;
           height: 52vh;
-          border: 1px solid rgba(201,169,110,0.07);
+          border: 1px solid rgba(168,85,46,0.14);
           border-radius: 50%;
           top: 50%;
           left: 50%;
@@ -136,7 +136,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           position: absolute;
           width: 30vh;
           height: 30vh;
-          border: 1px dashed rgba(201,169,110,0.18);
+          border: 1px dashed rgba(168,85,46,0.18);
           border-radius: 50%;
           top: 12%;
           left: 8%;
@@ -150,7 +150,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           top: 14%;
           width: 72px;
           height: 72px;
-          background-image: radial-gradient(circle, rgba(201,169,110,0.45) 1px, transparent 1px);
+          background-image: radial-gradient(circle, rgba(168,85,46,0.45) 1px, transparent 1px);
           background-size: 12px 12px;
           animation: floatY 6s ease-in-out infinite, fadeInDeco 0.7s ease 0.55s both;
           z-index: 1;
@@ -162,7 +162,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           bottom: 16%;
           width: 54px;
           height: 54px;
-          background-image: radial-gradient(circle, rgba(201,169,110,0.3) 1px, transparent 1px);
+          background-image: radial-gradient(circle, rgba(168,85,46,0.3) 1px, transparent 1px);
           background-size: 10px 10px;
           animation: floatY 8s ease-in-out infinite reverse, fadeInDeco 0.7s ease 0.65s both;
           z-index: 1;
@@ -172,7 +172,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           position: absolute;
           width: 42px;
           height: 42px;
-          border: 1px solid rgba(201,169,110,0.18);
+          border: 1px solid rgba(168,85,46,0.18);
           bottom: 22%;
           right: 9%;
           animation: floatY 7s ease-in-out infinite, spinSlow 18s linear infinite, fadeInDeco 0.7s ease 0.6s both;
@@ -183,7 +183,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           position: absolute;
           width: 18px;
           height: 18px;
-          border: 1px solid rgba(201,169,110,0.25);
+          border: 1px solid rgba(168,85,46,0.25);
           top: 24%;
           left: 9%;
           transform: rotate(30deg);
@@ -194,7 +194,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
         .maint-h {
           position: absolute;
           height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(201,169,110,0.18), transparent);
+          background: linear-gradient(90deg, transparent, rgba(168,85,46,0.18), transparent);
           animation: floatY 7s ease-in-out infinite, fadeInDeco 0.7s ease 0.75s both;
           z-index: 1;
         }
@@ -209,7 +209,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           font-family: 'JetBrains Mono', monospace;
           font-size: clamp(0.55rem, 0.7vw, 0.72rem);
           font-weight: 300;
-          color: rgba(201,169,110,0.2);
+          color: rgba(168,85,46,0.2);
           animation: floatY 8s ease-in-out infinite, fadeInDeco 0.7s ease 0.9s both;
           white-space: nowrap;
           z-index: 1;
@@ -233,7 +233,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           content: '';
           position: absolute;
           inset: 0;
-          background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(201,169,110,0.03) 0%, transparent 70%);
+          background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(168,85,46,0.05) 0%, transparent 70%);
           pointer-events: none;
         }
 
@@ -242,7 +242,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           font-size: clamp(0.7rem, 1vw, 1rem);
           letter-spacing: 0.28em;
           text-transform: uppercase;
-          color: #c9a96e;
+          color: #a8552e;
           margin-bottom: 1.2em;
           display: flex;
           align-items: center;
@@ -252,7 +252,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           content: '';
           width: 36px;
           height: 1px;
-          background: #c9a96e;
+          background: #a8552e;
           flex-shrink: 0;
         }
 
@@ -262,12 +262,12 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           font-size: clamp(2.8rem, 4.5vw, 7rem);
           line-height: 1.0;
           margin-bottom: 0.2em;
-          color: #e8e3dc;
+          color: #241d1a;
           letter-spacing: -0.02em;
           white-space: nowrap;
         }
         .maint-h1 span {
-          color: #e2c99a;
+          color: #c4703f;
           font-weight: 400;
           font-style: italic;
         }
@@ -276,7 +276,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           font-family: 'Space Grotesk', sans-serif;
           font-weight: 300;
           font-size: clamp(1rem, 1.6vw, 1.7rem);
-          color: #6b6560;
+          color: #6b5e56;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           margin-bottom: 2em;
@@ -285,7 +285,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
         .maint-divider {
           width: 52px;
           height: 1.5px;
-          background: linear-gradient(90deg, #c9a96e, transparent);
+          background: linear-gradient(90deg, #a8552e, transparent);
           margin-bottom: 1.8em;
         }
 
@@ -293,11 +293,11 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           font-family: 'Space Grotesk', sans-serif;
           font-size: clamp(0.9rem, 1.2vw, 1.3rem);
           line-height: 1.85;
-          color: #9e9892;
+          color: #6b5e56;
           font-weight: 300;
         }
         .maint-message strong {
-          color: #e8e3dc;
+          color: #241d1a;
           font-weight: 500;
         }
 
@@ -312,7 +312,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           width: 7px;
           height: 7px;
           border-radius: 50%;
-          background: #c9a96e;
+          background: #a8552e;
           animation: pulseDot 1.8s ease-in-out infinite;
         }
         .maint-dot:nth-child(2) { animation-delay: 0.3s; }
@@ -323,7 +323,7 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           font-size: clamp(0.7rem, 0.9vw, 0.9rem);
           letter-spacing: 0.22em;
           text-transform: uppercase;
-          color: #6b6560;
+          color: #6b5e56;
           margin-left: 8px;
         }
 
@@ -360,9 +360,9 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
             top: '1.2rem',
             right: '1.5rem',
             zIndex: 10,
-            background: 'rgba(201,169,110,0.08)',
-            border: '1px solid rgba(201,169,110,0.3)',
-            color: '#c9a96e',
+            background: 'rgba(168,85,46,0.08)',
+            border: '1px solid rgba(168,85,46,0.3)',
+            color: '#a8552e',
             fontFamily: "'Space Grotesk', sans-serif",
             fontSize: '0.75rem',
             fontWeight: 600,
@@ -372,8 +372,8 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
             cursor: 'pointer',
             transition: 'background 0.2s',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(201,169,110,0.16)')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(201,169,110,0.08)')}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(168,85,46,0.16)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(168,85,46,0.08)')}
         >
           {lang === 'en' ? 'FR' : 'EN'}
         </button>
@@ -391,14 +391,14 @@ export default function MaintenancePage({ profile }: MaintenancePageProps) {
           <div className="maint-h maint-h-2" />
 
           <svg className="maint-zigzag" width="44" height="36" viewBox="0 0 44 36" fill="none">
-            <polyline points="0,8  11,0  22,8  33,0  44,8"  stroke="#c9a96e" strokeWidth="1.5" fill="none"/>
-            <polyline points="0,20 11,12 22,20 33,12 44,20" stroke="#c9a96e" strokeWidth="1.5" fill="none"/>
-            <polyline points="0,32 11,24 22,32 33,24 44,32" stroke="#c9a96e" strokeWidth="1.5" fill="none"/>
+            <polyline points="0,8  11,0  22,8  33,0  44,8"  stroke="#a8552e" strokeWidth="1.5" fill="none"/>
+            <polyline points="0,20 11,12 22,20 33,12 44,20" stroke="#a8552e" strokeWidth="1.5" fill="none"/>
+            <polyline points="0,32 11,24 22,32 33,24 44,32" stroke="#a8552e" strokeWidth="1.5" fill="none"/>
           </svg>
           <svg className="maint-zigzag-2" width="36" height="28" viewBox="0 0 36 28" fill="none">
-            <polyline points="0,6  9,0  18,6  27,0  36,6"   stroke="#c9a96e" strokeWidth="1.2" fill="none"/>
-            <polyline points="0,16 9,10 18,16 27,10 36,16"  stroke="#c9a96e" strokeWidth="1.2" fill="none"/>
-            <polyline points="0,26 9,20 18,26 27,20 36,26"  stroke="#c9a96e" strokeWidth="1.2" fill="none"/>
+            <polyline points="0,6  9,0  18,6  27,0  36,6"   stroke="#a8552e" strokeWidth="1.2" fill="none"/>
+            <polyline points="0,16 9,10 18,16 27,10 36,16"  stroke="#a8552e" strokeWidth="1.2" fill="none"/>
+            <polyline points="0,26 9,20 18,26 27,20 36,26"  stroke="#a8552e" strokeWidth="1.2" fill="none"/>
           </svg>
 
           <span className="maint-code maint-code-1">const dev = true;</span>

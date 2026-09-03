@@ -9,6 +9,7 @@ import { MapPin, Calendar } from 'lucide-react';
 import { useApi } from '../hooks/useApi';
 import type { Experience } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { techBadgeStyle } from '../utils/color';
 
 const WORK_TYPE_LABELS: Record<string, string> = {
   remote: 'Remote',
@@ -139,7 +140,7 @@ function TimelineDot({ inView, index }: { inView: boolean; index: number }) {
       {inView && (
         <motion.div
           className="absolute rounded-full"
-          style={{ inset: -6, border: '1px solid #c9a96e' }}
+          style={{ inset: -6, border: '1px solid #a8552e' }}
           initial={{ scale: 0.6, opacity: 0.6 }}
           animate={{ scale: 1.8, opacity: 0 }}
           transition={{ duration: 1.2, delay: index * 0.1 + 0.4 }}
@@ -149,9 +150,9 @@ function TimelineDot({ inView, index }: { inView: boolean; index: number }) {
       <div
         className="w-3.5 h-3.5 rounded-full border-2"
         style={{
-          background: '#c9a96e',
-          borderColor: '#07070e',
-          boxShadow: '0 0 10px #c9a96e80, 0 0 24px #c9a96e30',
+          background: '#a8552e',
+          borderColor: '#f1e8dc',
+          boxShadow: '0 0 10px #a8552e80, 0 0 24px #a8552e30',
         }}
       />
     </motion.div>
@@ -186,9 +187,9 @@ function CardBody({
       whileHover={{ scale: 1.02, y: -3 }}
       className="group relative rounded-2xl cursor-default w-full"
       style={{
-        background: 'linear-gradient(135deg, #111120 0%, #0d0d18 100%)',
-        border: '1px solid #c9a96e22',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+        background: 'linear-gradient(135deg, #fdfaf6 0%, #f4ece2 100%)',
+        border: '1px solid #a8552e22',
+        boxShadow: '0 4px 24px rgba(74,55,42,0.10)',
         transition: 'border-color 0.3s, box-shadow 0.3s',
         padding: 'clamp(1rem, 1.8vw, 2rem)',
       }}
@@ -197,23 +198,23 @@ function CardBody({
       <div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
         style={{
-          border: '1px solid #c9a96e55',
-          boxShadow: '0 0 30px #c9a96e18, inset 0 0 20px #c9a96e08',
+          border: '1px solid #a8552e55',
+          boxShadow: '0 0 30px #a8552e18, inset 0 0 20px #a8552e08',
         }}
       />
 
       {/* Top accent line */}
       <div
         className="absolute top-0 left-8 right-8 h-px rounded-full opacity-40 group-hover:opacity-100 transition-opacity duration-300"
-        style={{ background: 'linear-gradient(90deg, transparent, #c9a96e, transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, #a8552e, transparent)' }}
       />
 
       {/* Date badge */}
       <div className="inline-flex items-center gap-1.5 mb-3">
-        <Calendar size={13} style={{ color: '#c9a96e' }} />
+        <Calendar size={13} style={{ color: '#a8552e' }} />
         <span
           className="font-grotesk font-medium"
-          style={{ color: '#c9a96e', fontSize: 'clamp(0.72rem, 0.9vw, 1rem)' }}
+          style={{ color: '#a8552e', fontSize: 'clamp(0.72rem, 0.9vw, 1rem)' }}
         >
           {dateRange}
         </span>
@@ -221,7 +222,7 @@ function CardBody({
 
       {/* Job title */}
       <h3
-        className="font-syne font-bold text-white leading-tight mb-1.5"
+        className="font-syne font-bold text-text-primary leading-tight mb-1.5"
         style={{ fontSize: 'clamp(1rem, 1.5vw, 1.7rem)' }}
       >
         {displayJobTitle}
@@ -234,12 +235,12 @@ function CardBody({
             src={exp.company_logo}
             alt={exp.company}
             className="w-6 h-6 rounded object-contain flex-shrink-0"
-            style={{ background: '#ffffff10', padding: '2px' }}
+            style={{ background: '#241d1a0d', padding: '2px' }}
           />
         )}
         <p
           className="font-grotesk font-semibold"
-          style={{ color: '#c9a96e', fontSize: 'clamp(0.85rem, 1.05vw, 1.15rem)' }}
+          style={{ color: '#a8552e', fontSize: 'clamp(0.85rem, 1.05vw, 1.15rem)' }}
         >
           {exp.company}
         </p>
@@ -251,9 +252,9 @@ function CardBody({
           <span
             className="font-grotesk px-2.5 py-0.5 rounded-full"
             style={{
-              background: '#ffffff08',
-              border: '1px solid #ffffff15',
-              color: '#9ca3af',
+              background: '#241d1a08',
+              border: '1px solid #241d1a12',
+              color: '#8a7c72',
               fontSize: 'clamp(0.68rem, 0.8vw, 0.88rem)',
             }}
           >
@@ -265,7 +266,7 @@ function CardBody({
             className="flex items-center gap-1.5 font-grotesk text-text-secondary"
             style={{ fontSize: 'clamp(0.72rem, 0.85vw, 0.95rem)' }}
           >
-            <MapPin size={11} style={{ color: '#c9a96e80' }} />
+            <MapPin size={11} style={{ color: '#a8552e80' }} />
             {exp.location}
           </span>
         )}
@@ -273,9 +274,9 @@ function CardBody({
           <span
             className="font-grotesk px-2.5 py-0.5 rounded-full"
             style={{
-              background: '#c9a96e14',
-              border: '1px solid #c9a96e30',
-              color: '#c9a96e',
+              background: '#a8552e14',
+              border: '1px solid #a8552e30',
+              color: '#a8552e',
               fontSize: 'clamp(0.72rem, 0.85vw, 0.95rem)',
             }}
           >
@@ -293,7 +294,7 @@ function CardBody({
               className="flex gap-2.5 font-grotesk text-text-secondary leading-relaxed"
               style={{ fontSize: 'clamp(0.8rem, 0.95vw, 1.05rem)' }}
             >
-              <span className="flex-shrink-0 mt-[0.45em] w-1.5 h-1.5 rounded-full" style={{ background: '#c9a96e80' }} />
+              <span className="flex-shrink-0 mt-[0.45em] w-1.5 h-1.5 rounded-full" style={{ background: '#a8552e80' }} />
               <span>{bullet.replace(/^[•\-]\s*/, '')}</span>
             </li>
           ))}
@@ -304,18 +305,13 @@ function CardBody({
       {exp.technologies.length > 0 && (
         <div
           className="flex flex-wrap gap-1.5 pt-3"
-          style={{ borderTop: '1px solid #ffffff08' }}
+          style={{ borderTop: '1px solid #241d1a08' }}
         >
           {exp.technologies.map((tech) => (
             <span
               key={tech.id}
               className="tech-badge flex items-center gap-1"
-              style={{
-                backgroundColor: tech.color + '20',
-                color: tech.color,
-                border: `1px solid ${tech.color}35`,
-                fontSize: 'clamp(0.68rem, 0.8vw, 0.88rem)',
-              }}
+              style={{ ...techBadgeStyle(tech.color), fontSize: 'clamp(0.68rem, 0.8vw, 0.88rem)' }}
             >
               {tech.icon_url && (
                 <img src={tech.icon_url} alt="" className="w-3.5 h-3.5 object-contain flex-shrink-0" />
@@ -340,7 +336,7 @@ function SkeletonCard({ isLeft }: { isLeft: boolean }) {
           <div className="flex justify-end pr-10 w-full">
             <div
               className="rounded-2xl p-5 animate-pulse space-y-3 w-full"
-              style={{ background: '#111120', border: '1px solid #1e1e2e' }}
+              style={{ background: '#fdfaf6', border: '1px solid #e3d8cb' }}
             >
               <div className="h-3 bg-border rounded w-2/5" />
               <div className="h-4 bg-border rounded w-3/4" />
@@ -360,7 +356,7 @@ function SkeletonCard({ isLeft }: { isLeft: boolean }) {
           <div className="pl-10 w-full">
             <div
               className="rounded-2xl p-5 animate-pulse space-y-3 w-full"
-              style={{ background: '#111120', border: '1px solid #1e1e2e' }}
+              style={{ background: '#fdfaf6', border: '1px solid #e3d8cb' }}
             >
               <div className="h-3 bg-border rounded w-2/5" />
               <div className="h-4 bg-border rounded w-3/4" />
@@ -372,7 +368,7 @@ function SkeletonCard({ isLeft }: { isLeft: boolean }) {
       {/* Mobile skeleton */}
       <div className="md:hidden flex gap-5 w-full">
         <div className="w-3.5 h-3.5 rounded-full bg-border animate-pulse flex-shrink-0 mt-5" />
-        <div className="flex-1 rounded-2xl p-5 animate-pulse space-y-2" style={{ background: '#111120', border: '1px solid #1e1e2e' }}>
+        <div className="flex-1 rounded-2xl p-5 animate-pulse space-y-2" style={{ background: '#fdfaf6', border: '1px solid #e3d8cb' }}>
           <div className="h-3 bg-border rounded w-2/5" />
           <div className="h-4 bg-border rounded w-3/4" />
           <div className="h-3 bg-border rounded w-1/2" />
@@ -404,7 +400,7 @@ export default function Experiences() {
       id="experience"
       ref={sectionRef}
       className="py-24 md:py-32 relative overflow-hidden"
-      style={{ background: '#07070e' }}
+      style={{ background: '#f1e8dc' }}
     >
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -412,17 +408,17 @@ export default function Experiences() {
           className="absolute inset-0 opacity-[0.025]"
           style={{
             backgroundImage:
-              'linear-gradient(#c9a96e 1px, transparent 1px), linear-gradient(90deg, #c9a96e 1px, transparent 1px)',
+              'linear-gradient(#a8552e 1px, transparent 1px), linear-gradient(90deg, #a8552e 1px, transparent 1px)',
             backgroundSize: '56px 56px',
           }}
         />
         <div
           className="absolute -top-32 right-1/4 w-80 h-80 rounded-full opacity-[0.04]"
-          style={{ background: 'radial-gradient(circle, #c9a96e 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, #a8552e 0%, transparent 70%)' }}
         />
         <div
           className="absolute -bottom-32 left-1/4 w-64 h-64 rounded-full opacity-[0.03]"
-          style={{ background: 'radial-gradient(circle, #60a5fa 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, #2c5fa8 0%, transparent 70%)' }}
         />
       </div>
 
@@ -454,15 +450,15 @@ export default function Experiences() {
             {/* track (faint) */}
             <div
               className="absolute inset-0"
-              style={{ background: 'linear-gradient(to bottom, transparent, #c9a96e18 15%, #c9a96e18 85%, transparent)' }}
+              style={{ background: 'linear-gradient(to bottom, transparent, #a8552e18 15%, #a8552e18 85%, transparent)' }}
             />
             {/* animated fill */}
             <motion.div
               className="absolute top-0 left-0 right-0 origin-top"
               style={{
                 scaleY: lineScaleY,
-                background: 'linear-gradient(to bottom, transparent, #c9a96e 10%, #c9a96e 90%, transparent)',
-                filter: 'drop-shadow(0 0 6px #c9a96e)',
+                background: 'linear-gradient(to bottom, transparent, #a8552e 10%, #a8552e 90%, transparent)',
+                filter: 'drop-shadow(0 0 6px #a8552e)',
                 height: '100%',
               }}
             />
@@ -472,13 +468,13 @@ export default function Experiences() {
           <div className="md:hidden absolute left-[1.6rem] top-0 bottom-0 w-px overflow-hidden">
             <div
               className="absolute inset-0"
-              style={{ background: 'linear-gradient(to bottom, transparent, #c9a96e28 15%, #c9a96e28 85%, transparent)' }}
+              style={{ background: 'linear-gradient(to bottom, transparent, #a8552e28 15%, #a8552e28 85%, transparent)' }}
             />
             <motion.div
               className="absolute top-0 left-0 right-0 origin-top"
               style={{
                 scaleY: lineScaleY,
-                background: 'linear-gradient(to bottom, transparent, #c9a96e 10%, #c9a96e 90%, transparent)',
+                background: 'linear-gradient(to bottom, transparent, #a8552e 10%, #a8552e 90%, transparent)',
                 height: '100%',
               }}
             />
